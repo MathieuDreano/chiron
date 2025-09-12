@@ -13,11 +13,13 @@ export type Game = {
   playtime: string;    // e.g. "60-120 min"
 };
 
+const api_base_url = "https://chiron-mz2f.onrender.com";
+
 const Games = () => {
   const [games, setGames] = useState<Game[]>([]);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/games`)
+    fetch(`${api_base_url}/games`)
       .then((res) => res.json())
       .then((data) => setGames(data))
       .catch((err) => console.error(err));
