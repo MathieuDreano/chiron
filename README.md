@@ -39,4 +39,20 @@ Add material UI
 npm install @mui/material @emotion/react @emotion/styled
 ```
 
-# backend
+# Backend
+
+## FastAPI
+
+```
+pip install "fastapi[standard]
+```
+
+You get:
+- FastAPI (the framework itself)
+- Uvicorn → the ASGI server to run your app
+- Pydantic extra types (like email, IPvAnyAddress)
+- python-multipart → needed if you handle form data / file uploads
+- jinja2 → for server-side templates (if you render HTML)
+- itsdangerous → useful for security, signing data
+
+[standard] gives you a ready-to-go setup for most APIs and simple web apps.
