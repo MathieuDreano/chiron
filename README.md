@@ -56,3 +56,32 @@ You get:
 - itsdangerous → useful for security, signing data
 
 [standard] gives you a ready-to-go setup for most APIs and simple web apps.
+
+### CORS configuration
+
+Why do we need CORSMiddleware?
+In order to make cross-origin requests (requests that originate from a different protocol, IP address, domain name, or port) you need to enable Cross Origin Resource Sharing (CORS).
+FastAPI's built-in CORSMiddleware handles this for us.
+
+```
+from fastapi.middleware.cors import CORSMiddleware
+
+
+app = FastAPI()
+
+origins = [
+    "http://localhost:5173",
+    "localhost:5173"
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+```
+
+The above configuration will allow cross-origin requests from our frontend domain and port which will run at localhost:5173.
