@@ -5,7 +5,7 @@ fullstack developper course
 sequenceDiagram
     participant User
     participant Browser
-    participant UI as UI Server (Nginx / Netlify)
+    participant UI as UI Server (Netlify)
     participant API as API Server (FastAPI)
     participant DB as Database
     participant Dev as Developer
@@ -77,6 +77,15 @@ Add material UI
 npm install @mui/material @emotion/react @emotion/styled
 ```
 
+## Netlify
+
+Frontend will be deployed on netlify servers.µ
+
+```
+npm install netlify-cli -g
+netlify init
+netlify deploy
+```
 # Backend
 
 ## FastAPI
