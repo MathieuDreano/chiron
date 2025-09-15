@@ -1,18 +1,47 @@
 import './App.css'
-import Games from './components/games/Games'
-import Stack from './components/stack/Stack'
-import Chiron from './components/chiron/Chiron'
+import { HomeRoute } from './pages/Home'
+import { StackRoute } from './pages/Stack'
+import { GamesRoute } from './pages/Games'
+import { StrictMode } from 'react'
+import {
+  Outlet,
+  RouterProvider,
+  Link,
+  createRouter,
+  createRootRoute,
+} from '@tanstack/react-router'
 
-function App() {
-  return (
+export const RootRoute = createRootRoute({
+  component: () => (
     <>
-      <Chiron/>
-      <Stack/>
-      <Games/>
-      <p className="read-the-docs">
-        Fullstack developper introduction
-      </p>
+      <div className="p-2 flex gap-2">
+        <Link to="/" className="[&.active]:font-bold">
+          Home
+        </Link>
+        {' | '}
+        <Link to="/stack" className="[&.active]:font-bold">
+          Stack
+        </Link>
+        {' | '}
+        <Link to="/games" className="[&.active]:font-bold">
+          Games
+        </Link>
+      </div>
+      <hr />
+      <Outlet />
     </>
+  ),
+})
+
+const routeTree = RootRoute.addChildren([HomeRoute, StackRoute, GamesRoute])
+
+const router = createRouter({ routeTree })
+
+const App = () => {
+  return (
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>
   )
 }
 
