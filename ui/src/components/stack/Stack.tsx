@@ -1,6 +1,7 @@
-import reactLogo from '../assets/react.svg'
-import fastApiLogo from '../assets/fastapi.svg'
-import pythonLogo from '../assets/python.svg'
+import './stack.css'
+import reactLogo from '../../assets/react.svg'
+import fastApiLogo from '../../assets/fastapi.svg'
+import pythonLogo from '../../assets/python.svg'
 import viteLogo from '/vite.svg'
 
 const Stack = () => (

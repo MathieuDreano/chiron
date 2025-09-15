@@ -14,6 +14,7 @@ export type Game = {
 };
 
 const api_base_url = "https://chiron-mz2f.onrender.com";
+//const api_base_url_local = "http://localhost:8000";
 
 const Games = () => {
   const [games, setGames] = useState<Game[]>([]);

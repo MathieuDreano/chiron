@@ -1,7 +1,7 @@
 import './App.css'
-import Games from './components/Games'
-import Stack from './components/Stack'
-import Chiron from './components/Chiron'
+import Games from './components/games/Games'
+import Stack from './components/stack/Stack'
+import Chiron from './components/chiron/Chiron'
 
 function App() {
   return (
