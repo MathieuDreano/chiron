@@ -10,7 +10,7 @@ function App() {
       <Stack/>
       <Games/>
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        Fullstack developper introduction
       </p>
     </>
   )
