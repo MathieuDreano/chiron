@@ -89,8 +89,13 @@ npm run dev
 Frontend will be deployed on netlify servers.µ
 
 ```
+cd ui
 npm install netlify-cli -g
 netlify init
+```
+
+```
+cd ui
 netlify deploy
 ```
 
