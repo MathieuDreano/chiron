@@ -77,7 +77,14 @@ Add material UI
 npm install @mui/material @emotion/react @emotion/styled
 ```
 
-## Netlify
+### Launch UI
+
+```
+cd ui
+npm run dev
+```
+
+## Hosting UI (Netlify)
 
 Frontend will be deployed on netlify servers.µ
 
@@ -86,6 +93,7 @@ npm install netlify-cli -g
 netlify init
 netlify deploy
 ```
+
 # Backend
 
 ## FastAPI
@@ -132,3 +140,14 @@ app.add_middleware(
 ```
 
 The above configuration will allow cross-origin requests from our frontend domain and port which will run at localhost:5173.
+
+### Launch API
+
+```
+cd api
+fastapi dev main.py
+```
+
+### Hosting API (render)
+
+We use the render website to host our API
