@@ -25,7 +25,7 @@ const Games = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  if (!games) return <p>Loading games from api...</p>;
+  if (!games  || games.length == 0) return <h2>Loading games from api...</h2>;
 
   return (
     <Container sx={{ py: 4 }}>
