@@ -146,6 +146,14 @@ app.add_middleware(
 
 The above configuration will allow cross-origin requests from our frontend domain and port which will run at localhost:5173.
 
+### Database
+
+We use a postgres database hosted on Aiven.
+
+In python we use SQLAlchemy to connect to this database
+
+The connection password is stored in a local `.env` file for the dev, and stored in render website as a secret for production
+
 ### Launch API
 
 ```
@@ -156,3 +164,5 @@ fastapi dev main.py
 ### Hosting API (render)
 
 We use the render website to host our API
+It is required to define secrets to connect to our databse without compromising our password
+![Secrets Image](secrets.png)

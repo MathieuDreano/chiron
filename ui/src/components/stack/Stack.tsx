@@ -2,6 +2,7 @@ import './stack.css'
 import reactLogo from '@/assets/react.svg'
 import fastApiLogo from '@/assets/fastapi.svg'
 import pythonLogo from '@/assets/python.svg'
+import postgreSQLLogo from '@/assets/postgresql.svg'
 import viteLogo from '/vite.svg'
 
 const Stack = () => (
@@ -48,6 +49,15 @@ const Stack = () => (
             </a>
           </div>
           <h1>FastAPI</h1>
+        </div>
+
+        <div>
+          <div className="logo">
+            <a href="https://www.postgresql.org/" target="_blank">
+              <img src={postgreSQLLogo} className="logo postgresql" alt="PostgreSQL logo" />
+            </a>
+          </div>
+          <h1>PostgreSQL</h1>
         </div>
       </div>
     </div>
