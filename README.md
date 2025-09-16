@@ -1,6 +1,8 @@
 # chiron
 fullstack developper course
 
+![Flow diagram](fullstack_course.png)
+
 ```mermaid
 sequenceDiagram
     participant User
