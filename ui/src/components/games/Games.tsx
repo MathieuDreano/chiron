@@ -1,4 +1,3 @@
-// src/pages/Games.tsx
 import { useState, useEffect } from "react"
 import Grid from "@mui/material/Grid"
 import Container from "@mui/material/Container"

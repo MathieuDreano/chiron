@@ -10,6 +10,7 @@ import {
   createRouter,
   createRootRoute,
 } from '@tanstack/react-router'
+import { ImmoRoute } from './pages/Immo'
 
 export const RootRoute = createRootRoute({
   component: () => (
@@ -26,6 +27,10 @@ export const RootRoute = createRootRoute({
         <Link to="/games" className="[&.active]:font-bold">
           Games
         </Link>
+        {' | '}
+        <Link to="/immo" className="[&.active]:font-bold">
+          Immo
+        </Link>
       </div>
       <hr />
       <Outlet />
@@ -33,7 +38,7 @@ export const RootRoute = createRootRoute({
   ),
 })
 
-const routeTree = RootRoute.addChildren([HomeRoute, StackRoute, GamesRoute])
+const routeTree = RootRoute.addChildren([HomeRoute, StackRoute, GamesRoute, ImmoRoute])
 
 const router = createRouter({ routeTree })
 
