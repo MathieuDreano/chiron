@@ -2,6 +2,7 @@ import './App.css'
 import { HomeRoute } from './pages/Home'
 import { StackRoute } from './pages/Stack'
 import { GamesRoute } from './pages/Games'
+import { ImmoRoute } from './pages/Immo'
 import { StrictMode } from 'react'
 import {
   Outlet,
@@ -10,7 +11,6 @@ import {
   createRouter,
   createRootRoute,
 } from '@tanstack/react-router'
-import { ImmoRoute } from './pages/Immo'
 
 export const RootRoute = createRootRoute({
   component: () => (
