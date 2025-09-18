@@ -11,6 +11,7 @@
 
 .immo-summary {
     text-align: center;
+    align-items: center;
 }
 .immo-summary.default {
   background-color: #f9f9f9;

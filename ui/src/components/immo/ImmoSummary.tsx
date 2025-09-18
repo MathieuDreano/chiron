@@ -1,32 +1,35 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Tooltip, Typography } from "@mui/material";
+import type { CashflowData } from "./Immo";
 
-type ImmoSummaryProps = {
-  totalAchat: number;
-  mensualite: number;
-  cashflowMensuel: number;
-  rentabiliteBrute: number;
-  rentabiliteNette: number;
-};
 
-const ImmoSummary = ({
-  totalAchat,
-  mensualite,
-  cashflowMensuel,
-  rentabiliteBrute,
-  rentabiliteNette,
-}: ImmoSummaryProps) => {
 
-  const statusClassName = (cashflowMensuel > 0) ? "positive" : "negative"
-  console.log("statusClassName", statusClassName)
+const ImmoSummary = (data: CashflowData) => {
+
+  const statusClassName = (data.cashflowMensuel > 0) ? "positive" : "negative"
   return (
     <Card className={`immo-summary ${statusClassName}`}>
       <CardContent>
         <Typography variant="h6">Résumé</Typography>
-        <Typography>Total coût d'achat: {totalAchat.toFixed(0)} €</Typography>
-        <Typography>Mensualité crédit: {mensualite.toFixed(2)} €</Typography>
-        <Typography>Cashflow mensuel: {cashflowMensuel.toFixed(2)} €</Typography>
-        <Typography>Rentabilité brute: {rentabiliteBrute.toFixed(2)} %</Typography>
-        <Typography>Rentabilité nette: {rentabiliteNette.toFixed(2)} %</Typography>
+
+        <Typography>Total coût d'achat: {data.totalAchat.toFixed(0)} €</Typography>
+
+        <Typography>Revenu mensuel brut: {data.revenusMensuelBrut.toFixed(0)} €</Typography>
+
+        <Typography>Revenu mensuel net (NOI): {data.revenuNetMensuel.toFixed(0)} €</Typography>
+
+        <Typography>apport = fraisAchat + fraisAgence + fraisDivers = {data.apport}</Typography>
+        <Tooltip arrow title="(montantCredit * tauxMensuel) / (1 - (1 + tauxMensuel)^-dureeEnMois)">
+            <Typography variant="body1">Mensualité crédit: {data.mensualite.toFixed(0)} €</Typography>
+        </Tooltip>
+
+        <Typography>Total dépenses: {data.totalDepense.toFixed(0)} €</Typography>
+
+        <hr/>
+        <Typography>Cashflow mensuel: {data.cashflowMensuel.toFixed(0)} €</Typography>
+
+        <Typography>Rentabilité brute: {data.rentabiliteBrute.toFixed(2)} %</Typography>
+
+        <Typography>Rentabilité nette: {data.rentabiliteNette.toFixed(2)} %</Typography>
       </CardContent>
     </Card>
   );
