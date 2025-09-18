@@ -1,15 +1,15 @@
 //import { useState, useEffect } from "react"
 
-import { Paper } from "@mui/material";
 import { useMemo, useState } from "react";
 import ImmoForm from "./ImmoForm";
 import ImmoSummary from "./ImmoSummary";
+import './immo.css'
 
 const Immo = () => {
   
     const [form, setForm] = useState({
     prixVente: 70000,
-    fraisAgence: 4785,
+    fraisAgence: 5000,
     fraisDivers: 1500,
     fraisRenovation: 0,
     loyer: 450,
@@ -73,13 +73,10 @@ const Immo = () => {
   }, [form]);
 
   return (
-    <Paper
-      component="form"
-      sx={{ display: "flex", flexDirection: "column", gap: 3, padding: "2em" }}
-    >
+    <div className="immo">
       <ImmoSummary  {...results}/>
       <ImmoForm form={form} onChange={handleChange}/>
-    </Paper>
+    </div>
 
   );
 }

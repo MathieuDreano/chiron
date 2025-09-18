@@ -1,0 +1,22 @@
+.immo {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.immo-form {
+    padding-inline: 1em;
+}
+
+.immo-summary {
+    text-align: center;
+}
+.immo-summary.default {
+  background-color: #f9f9f9;
+}
+.immo-summary.positive {
+  background-color: #d0f0c0;
+}
+.immo-summary.negative {
+  background-color: #f8d7da;
+}

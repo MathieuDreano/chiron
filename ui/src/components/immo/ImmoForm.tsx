@@ -21,7 +21,7 @@ const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
   const montantCredit = totalAchat-apport;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", rowGap: "2em"}}>
+    <div className="immo-form" style={{ display: "flex", flexDirection: "column", rowGap: "2em"}}>
         <div>
             <Typography variant="h6">Coût achat ({totalAchat}€)</Typography>
             <div style={{ display: "flex",  flexWrap: "wrap", gap: "1em", flexDirection: "row" }}>

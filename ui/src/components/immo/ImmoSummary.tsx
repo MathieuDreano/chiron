@@ -16,12 +16,10 @@ const ImmoSummary = ({
   rentabiliteNette,
 }: ImmoSummaryProps) => {
 
-  let bgColor = "#f9f9f9"; // default
-  if (cashflowMensuel > 0) bgColor = "#d0f0c0"; // light green
-  else if (cashflowMensuel < 0) bgColor = "#f8d7da"; // light red
-
+  const statusClassName = (cashflowMensuel > 0) ? "positive" : "negative"
+  console.log("statusClassName", statusClassName)
   return (
-    <Card sx={{ mt: 2, background: bgColor }}>
+    <Card className={`immo-summary ${statusClassName}`}>
       <CardContent>
         <Typography variant="h6">Résumé</Typography>
         <Typography>Total coût d'achat: {totalAchat.toFixed(0)} €</Typography>

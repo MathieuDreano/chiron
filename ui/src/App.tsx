@@ -7,33 +7,19 @@ import { StrictMode } from 'react'
 import {
   Outlet,
   RouterProvider,
-  Link,
   createRouter,
   createRootRoute,
 } from '@tanstack/react-router'
+import Menu from './components/menu/Menu'
+import { Box } from '@mui/material'
 
 export const RootRoute = createRootRoute({
   component: () => (
     <>
-      <div className="p-2 flex gap-2">
-        <Link to="/" className="[&.active]:font-bold">
-          Home
-        </Link>
-        {' | '}
-        <Link to="/stack" className="[&.active]:font-bold">
-          Stack
-        </Link>
-        {' | '}
-        <Link to="/games" className="[&.active]:font-bold">
-          Games
-        </Link>
-        {' | '}
-        <Link to="/immo" className="[&.active]:font-bold">
-          Immo
-        </Link>
-      </div>
-      <hr />
-      <Outlet />
+      <Menu/>
+      <Box sx={{ padding: "2em" }}>
+        <Outlet />
+      </Box>
     </>
   ),
 })
