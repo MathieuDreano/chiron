@@ -8,10 +8,5 @@ import {
 export const HomeRoute = createRoute({
   getParentRoute: () => RootRoute,
   path: '/',
-  component: () => (
-    <div className="p-2">
-      <Chiron/>
-      <h1>Fullstack developper introduction</h1>
-    </div>
-  )
+  component: () => <Chiron/>
 })

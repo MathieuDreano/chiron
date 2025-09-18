@@ -4,20 +4,25 @@ import fastApiLogo from '@/assets/fastapi.svg'
 import pythonLogo from '@/assets/python.svg'
 import postgreSQLLogo from '@/assets/postgresql.svg'
 import viteLogo from '/vite.svg'
+import { Card, Stack } from '@mui/material'
 
-const Stack = () => (
-  <div>
-
-    <div>
+const TechStack = () => (
+  <div className='stack'>
+    <Card sx={{ flexWrap: 'wrap', backgroundColor: 'papayawhip' }}>
       <h2>Frontend</h2>
-      <div className="stack">
+      <Stack
+        spacing={{ xs: 1, sm: 2 }}
+        direction="row"
+        useFlexGap
+        sx={{ flexWrap: 'wrap' }}
+      >
         <div>
           <div className="logo spin">
             <a href="https://react.dev" target="_blank">
               <img src={reactLogo} className="logo react" alt="React logo" />
             </a>
           </div>
-          <h1>React</h1>
+          <h3>React</h3>
         </div>
         <div>
           <div className="logo">
@@ -25,21 +30,26 @@ const Stack = () => (
               <img src={viteLogo} className="logo vite" alt="Vite logo" />
             </a>
           </div>
-          <h1>Vite</h1>
+          <h3>Vite</h3>
         </div>
-      </div>
-    </div>
+      </Stack>
+    </Card>
 
-    <div>
+    <Card sx={{ flexWrap: 'wrap', backgroundColor: 'papayawhip' }}>
       <h2>Backend</h2>
-      <div className="stack">
+      <Stack
+        spacing={{ xs: 1, sm: 2 }}
+        direction="row"
+        useFlexGap
+        sx={{ flexWrap: 'wrap' }}
+      >
         <div>
           <div className="logo">
             <a href="https://www.python.org/" target="_blank">
               <img src={pythonLogo} className="logo python" alt="Python logo" />
             </a>
           </div>
-          <h1>Python</h1>
+          <h3>Python</h3>
         </div>
 
         <div>
@@ -48,7 +58,7 @@ const Stack = () => (
               <img src={fastApiLogo} className="logo fastapi" alt="FastAPI logo" />
             </a>
           </div>
-          <h1>FastAPI</h1>
+          <h3>FastAPI</h3>
         </div>
 
         <div>
@@ -57,12 +67,11 @@ const Stack = () => (
               <img src={postgreSQLLogo} className="logo postgresql" alt="PostgreSQL logo" />
             </a>
           </div>
-          <h1>PostgreSQL</h1>
+          <h3>PostgreSQL</h3>
         </div>
-      </div>
-    </div>
-
+      </Stack>
+    </Card>
   </div>
 )
 
-export default Stack;
+export default TechStack;
