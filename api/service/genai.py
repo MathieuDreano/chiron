@@ -12,6 +12,4 @@ def ask_genai(content: str):
         model='gemini-2.5-flash',
         contents=content,
     )
-    return response
-
-print(response.text) # output is often markdown
+    return response.candidates[0].content.parts[0].text

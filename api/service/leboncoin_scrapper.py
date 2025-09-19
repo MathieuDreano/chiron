@@ -1,9 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import re
 from genai import ask_genai
 
-url = "https://www.leboncoin.fr/ad/ventes_immobilieres/3049308327"
+url = "https://www.leboncoin.fr/ad/ventes_immobilieres/3028751865"
 
 # Headers
 headers = {
@@ -84,4 +85,25 @@ ad_data = data.get("props", {}).get("pageProps", {}).get("ad", {})
 
 wonder = ask_genai(f'Extract taxe fonciere in {ad_data}')
 print(wonder)
-print(json.dumps(ad_data, indent=4, ensure_ascii=False))
+
+def extract_taxe_fonciere(genai_answer: str) -> int | None:
+    """
+    Extracts the taxe foncière amount (integer in euros) from a GenAI answer string.
+    Example input: "320€ / an"
+    Returns: 320
+    """
+    if not genai_answer:
+        return None
+
+    # Look for the first number in the string
+    match = re.search(r"\d+(?:[.,]\d+)?", genai_answer)
+    if match:
+        value = match.group(0).replace(",", ".")
+        try:
+            return int(float(value))
+        except ValueError:
+            return None
+    return None
+
+print(extract_taxe_fonciere(wonder))
+#print(json.dumps(ad_data, indent=4, ensure_ascii=False))
