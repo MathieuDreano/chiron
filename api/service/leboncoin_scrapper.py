@@ -103,6 +103,7 @@ def extract_with_prompt(text: str) -> dict:
         Analyze the ad text and return only a strictly valid JSON with the following keys:
 
         - prixVente: total sale price of the property (in euros, integer)  
+        - superficie: nombe de m²
         - fraisAgence: agency fees amount (in euros, integer)  
         - loyers: current monthly rent (in euros, integer)  
         - taxeFonciere: annual property tax (in euros, integer)  

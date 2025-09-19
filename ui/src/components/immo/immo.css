@@ -5,6 +5,13 @@
   text-align: start;
 }
 
+.scrapper {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin: auto;
+}
+
 .immo-form {
     padding-inline: 1em;
 }
