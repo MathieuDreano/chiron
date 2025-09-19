@@ -24,6 +24,8 @@ const ImmoSummary = (data: CashflowData) => {
 
         <Typography>Total dépenses: {data.totalDepense.toFixed(0)} €</Typography>
 
+        <Typography>Impot sur les bénéfices: {data.impotsBenefices.toFixed(0)} €</Typography>
+
         <hr/>
         <Typography>Cashflow mensuel: {data.cashflowMensuel.toFixed(0)} €</Typography>
 
