@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import ImmoForm from "./ImmoForm";
 import ImmoSummary from "./ImmoSummary";
 import './immo.css'
+import { Button, CircularProgress, TextField, Typography } from "@mui/material";
 
 export type CashflowData = {
       totalAchat: number,
@@ -65,6 +66,9 @@ const defaultFormData: FormData = {
 
 const Immo = () => {
   
+  const [adId, setAdId] = useState<number>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [scrappedData, setScrappedData] = useState<string>();
   const [form, setForm] = useState<FormData>(() => {
     const saved = localStorage.getItem("formData");
     console.log('retrieving from local storage', saved);
@@ -76,6 +80,20 @@ const Immo = () => {
     localStorage.setItem("formData", JSON.stringify(form));
     console.log('saving to local storage');
   }, [form]);
+
+  const load_data_from_ad = (adId: number) => {
+      //const api_base_url = "https://chiron-mz2f.onrender.com";
+      const api_base_url = "http://localhost:8000";
+      setIsLoading(true)
+      return fetch(`${api_base_url}/leboncoin/scrap/${adId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(`scrapped data: ${data}`)
+          setScrappedData(data)
+        })
+        .catch((err) => console.error(err))
+        .finally(() => setIsLoading(false));
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -133,6 +151,11 @@ const Immo = () => {
 
   return (
     <div className="immo">
+      <div className="scrapper">
+        <TextField name="adId" label="Id de l'offre leboncoin" type="number" defaultValue={adId} onChange={(e) => setAdId(parseInt(e.target.value))}/>
+        <Button onClick={() => adId && load_data_from_ad(adId)} disabled={!adId || isLoading}>{isLoading ? <CircularProgress/> : `EXTRACT DATA`}</Button>
+      </div>
+      {scrappedData && <Typography>{scrappedData}</Typography>}
       <ImmoSummary  {...results}/>
       <ImmoForm form={form} onChange={handleChange}/>
     </div>
