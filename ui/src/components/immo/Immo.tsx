@@ -131,6 +131,20 @@ function extractId(input: string) {
   }
 }
 
+function calculerTaxeFonciere(valeurLocativeBruteAnnuelle: number) {
+  // Taux en pourcentage
+  const tauxMunicipal = 46.3; // en %
+  const tauxMetropolitain = 6.41; // en %
+
+  // Base imposable = moitié de la valeur locative brute
+  const baseImposable = valeurLocativeBruteAnnuelle / 2;
+
+  // Calcul de la taxe
+  const taxe = baseImposable * (tauxMunicipal + tauxMetropolitain) / 100;
+  console.log("taxe fonciere estimée", taxe);
+  return taxe;
+}
+
 const Immo = () => {
   
   const [adId, setAdId] = useState<number>(() => {
@@ -211,7 +225,7 @@ const Immo = () => {
     const revenuAnnuelBrut = revenusMensuelBrut * 12;
 
     // DEPENSES
-    const taxesFonciereEtCrl = (form.loyer - form.chargesLocatives) * form.crl / 100 + form.taxeFonciere;
+    const taxesFonciereEtCrl = (form.loyer - form.chargesLocatives) * form.crl / 100 + (form.taxeFonciere || (calculerTaxeFonciere(revenuAnnuelBrut) / 12));
     const depensesMensuelles = form.chargesLocatives + form.gestion + form.entretien + taxesFonciereEtCrl + form.servicesPublics;    
     const revenuNetMensuel = revenusMensuels - depensesMensuelles;
     const revenuAnnuelNet = revenuNetMensuel * 12;
