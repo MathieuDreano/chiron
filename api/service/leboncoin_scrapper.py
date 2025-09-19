@@ -2,9 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import re
-from genai import ask_genai
-
-url = "https://www.leboncoin.fr/ad/ventes_immobilieres/3028751865"
+from service.genai import ask_genai
 
 # Headers
 headers = {
@@ -64,46 +62,70 @@ cookies = {
     "_dd_s": "aid=65b173e8-eae9-4f6a-9550-c2a52a89d356&rum=0&expire=1758269229653",
 }
 
-response = requests.get(url, headers=headers, cookies=cookies)
+def get_form_data_from_ad_id(ad_id: int):
 
-if response.status_code != 200:
-    print("Failed request:", response.status_code)
-    exit()
+    url = f"https://www.leboncoin.fr/ad/ventes_immobilieres/{ad_id}"
+    response = requests.get(url, headers=headers, cookies=cookies)
 
-soup = BeautifulSoup(response.text, "html.parser")
+    if response.status_code != 200:
+        print("Failed request:", response.status_code)
+        exit()
 
-# Leboncoin injects JSON inside <script id="__NEXT_DATA__"> ... </script>
-script_tag = soup.find("script", {"id": "__NEXT_DATA__"})
-if not script_tag:
-    print("No JSON script found")
-    exit()
+    soup = BeautifulSoup(response.text, "html.parser")
 
-data = json.loads(script_tag.string)
+    # Leboncoin injects JSON inside <script id="__NEXT_DATA__"> ... </script>
+    script_tag = soup.find("script", {"id": "__NEXT_DATA__"})
+    if not script_tag:
+        print("No JSON script found")
+        exit()
 
-# Navigate to "props" -> "pageProps" -> "ad"
-ad_data = data.get("props", {}).get("pageProps", {}).get("ad", {})
+    data = json.loads(script_tag.string)
 
-wonder = ask_genai(f'Extract taxe fonciere in {ad_data}')
-print(wonder)
+    # Navigate to "props" -> "pageProps" -> "ad"
+    ad_data = data.get("props", {}).get("pageProps", {}).get("ad", {})
+    scrapped_data = extract_with_prompt(ad_data)
+    print(scrapped_data)
+    return scrapped_data
 
-def extract_taxe_fonciere(genai_answer: str) -> int | None:
+
+def extract_with_prompt(text: str) -> dict:
     """
-    Extracts the taxe foncière amount (integer in euros) from a GenAI answer string.
-    Example input: "320€ / an"
-    Returns: 320
-    """
-    if not genai_answer:
-        return None
+        Utilise GenAI pour extraire les informations principales d'une annonce immobilière.
 
-    # Look for the first number in the string
-    match = re.search(r"\d+(?:[.,]\d+)?", genai_answer)
+        Parameters:
+            text (str): Texte complet de l'annonce
+
+        Returns:
+            dict: Dictionnaire contenant prixVente, fraisAgence, loyers, taxeFonciere et charges
+    """
+    prompt = f"""
+        You are a real estate data extractor.  
+        Analyze the ad text and return only a strictly valid JSON with the following keys:
+
+        - prixVente: total sale price of the property (in euros, integer)  
+        - fraisAgence: agency fees amount (in euros, integer)  
+        - loyers: current monthly rent (in euros, integer)  
+        - taxeFonciere: annual property tax (in euros, integer)  
+        - charges: annual condominium charges (in euros, integer)  
+
+        If a piece of information is not present in the ad, set it to `null`.  
+        Do not return anything other than the raw JSON.
+
+        ### Ad text to analyze:
+        \"\"\"
+        {text}
+        \"\"\"
+    """
+
+    # Appel à GenAI
+    response = ask_genai(prompt)
+    return to_raw_json(response)
+
+def to_raw_json(text: str):
+    # Match content between first { and last }
+    match = re.search(r'\{.*\}', text, re.DOTALL)
     if match:
-        value = match.group(0).replace(",", ".")
-        try:
-            return int(float(value))
-        except ValueError:
-            return None
-    return None
-
-print(extract_taxe_fonciere(wonder))
-#print(json.dumps(ad_data, indent=4, ensure_ascii=False))
+        raw_json = match.group(0)
+        print(raw_json)
+        return raw_json
+    return "{}"
