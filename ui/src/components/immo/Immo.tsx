@@ -118,7 +118,7 @@ function calculateMonthlyInterests(totalAchat: number, apport: number, form: Imm
   return interests; // array of monthly interests
 }
 
-function extractId(input) {
+function extractId(input: string) {
   // Ensure input is a string and trim whitespace
   const value = input.toString().trim();
 
@@ -252,13 +252,11 @@ const Immo = () => {
         }
         {
           isLoading ? (<CircularProgress/>) : (
-            <>
-              <Button variant="outlined" onClick={() => adId && load_data_from_ad(adId)} disabled={!adId}>EXTRACT DATA ✨</Button>
-              {scrappedData && <Typography>{JSON.stringify(scrappedData, null, 2)}</Typography>}
-            </>
+            <Button variant="outlined" onClick={() => adId && load_data_from_ad(adId)} disabled={!adId}>EXTRACT DATA ✨</Button>
           )
         }
       </div>
+      {scrappedData && <Typography>{JSON.stringify(scrappedData, null, 2)}</Typography>}
       <ImmoSummary  {...results}/>
       <ImmoForm form={form} onChange={handleChange}/>
     </div>
