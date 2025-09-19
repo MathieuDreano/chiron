@@ -29,6 +29,7 @@ export type ImmoFormData = {
   tauxInteret: number;
   tauxAssurance: number;
 
+  superficie: number;
   loyer: number;
   vacance: number;
   autresRevenus: number;
@@ -59,6 +60,7 @@ const defaultFormData: ImmoFormData = {
     tauxInteret: 3, //(%)
     tauxAssurance: 0.2, //(%)
 
+    superficie: 0,
     loyer: 0,
     vacance: 0,
     autresRevenus: 0,
