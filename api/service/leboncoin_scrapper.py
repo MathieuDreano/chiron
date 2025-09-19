@@ -99,20 +99,19 @@ def extract_with_prompt(text: str) -> dict:
             dict: Dictionnaire contenant prixVente, fraisAgence, loyers, taxeFonciere et charges
     """
     prompt = f"""
-        Vous êtes un extracteur de données immobilières.
-        Analysez le texte de l’annonce et retournez uniquement un JSON strictement valide avec les clés suivantes :
+        Analysez le texte de l'annonce et retournez uniquement un JSON strictement valide avec les clés suivantes :
 
         - prixVente : prix total de vente du bien (en euros, entier)
         - superficie : nombre de m²
-        - fraisAgence : montant des frais d’agence (en euros, entier)
-        - loyers : loyer mensuel actuel (en euros, entier)
+        - fraisAgence : montant des frais d'agence (en euros, entier)
+        - loyers : loyer mensuel actuel, charges comprises (en euros, entier)
         - taxeFonciere : taxe foncière mensuelle (en euros, entier)
         - charges : charges mensuelles de copropriété (en euros, entier)
 
-        Si une information n’est pas présente dans l’annonce, mettez-la à null.
-        Ne retournez rien d’autre que le JSON brut.
+        Si une information n'est pas présente dans l'annonce, mettez-la à null.
+        Ne retournez rien d'autre que le JSON brut.
 
-        ### Texte de l’annonce à analyser :
+        ### Texte de l'annonce à analyser :
         \"\"\"
         {text}
         \"\"\"

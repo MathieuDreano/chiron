@@ -120,7 +120,10 @@ function calculateMonthlyInterests(totalAchat: number, apport: number, form: Imm
 
 const Immo = () => {
   
-  const [adId, setAdId] = useState<number>();
+  const [adId, setAdId] = useState<number>(() => {
+    const saved = localStorage.getItem("adId");
+    return saved ? JSON.parse(saved) : "";
+  });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [scrappedData, setScrappedData] = useState<string>();
   const [form, setForm] = useState<ImmoFormData>(() => {
@@ -133,6 +136,10 @@ const Immo = () => {
     const handler = setTimeout(() => localStorage.setItem("formData", JSON.stringify(form)), 5000);
     return () => clearTimeout(handler);
   }, [form]);
+  useEffect(() => {
+    const handler = setTimeout(() => localStorage.setItem("adId", JSON.stringify(adId)), 5000);
+    return () => clearTimeout(handler);
+  }, [adId]);
 
   const load_data_from_ad = (adId: number) => {
       const api_base_url = "https://chiron-mz2f.onrender.com";
@@ -146,7 +153,8 @@ const Immo = () => {
             ...prev,
             prixVente: jsonData.prixVente ?? 0,
             fraisAgence: jsonData.fraisAgence ?? 0,
-            superficie: jsonData.superficie,
+            loyer: jsonData.loyers ?? 0,
+            superficie: jsonData.superficie ?? 0,
             taxeFonciere: jsonData.taxeFonciere ?? 0,
             chargesLocatives: jsonData.charges ?? 0,
           }));
@@ -168,7 +176,7 @@ const Immo = () => {
 
     // ACHAT
     const fraisAchat = (form.prixVente - form.fraisAgence)*0.08
-    const totalAchat = form.prixVente + fraisAchat + form.fraisDivers + form.fraisRenovation || 0;
+    const totalAchat = (form.prixVente + fraisAchat + form.fraisDivers + form.fraisRenovation) || 0;
     
     // PRET
     const apport = fraisAchat + form.fraisAgence + form.fraisDivers;
@@ -223,6 +231,11 @@ const Immo = () => {
     <div className="immo">
       <div className="scrapper">
         <TextField name="adId" label="Id de l'offre leboncoin" type="number" defaultValue={adId} onChange={(e) => setAdId(parseInt(e.target.value))}/>
+        {adId &&
+          <a href={`https://www.leboncoin.fr/ad/ventes_immobilieres/${adId}`} target="_blank" rel="noopener noreferrer">
+            <Button variant="outlined">VOIR L'ANNONCE</Button>
+          </a>
+        }
         {
           isLoading ? (<CircularProgress/>) : (
             <>
