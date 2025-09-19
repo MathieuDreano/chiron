@@ -118,6 +118,19 @@ function calculateMonthlyInterests(totalAchat: number, apport: number, form: Imm
   return interests; // array of monthly interests
 }
 
+function extractId(input) {
+  // Ensure input is a string and trim whitespace
+  const value = input.toString().trim();
+
+  // Regex to match digits at the end of the URL or a raw ID
+  const match = value.match(/(\d+)$/);
+  if (match) {
+    return match[1];
+  } else {
+    throw new Error("No valid ID found in input");
+  }
+}
+
 const Immo = () => {
   
   const [adId, setAdId] = useState<number>(() => {
@@ -194,6 +207,7 @@ const Immo = () => {
     const revenusMensuels = form.loyer + form.autresRevenus;
     const loyerVacance = form.loyer * form.vacance;
     const revenusMensuelBrut = revenusMensuels - loyerVacance - form.chargesLocatives;
+    console.log(revenusMensuelBrut, revenusMensuels, loyerVacance, form.chargesLocatives)
     const revenuAnnuelBrut = revenusMensuelBrut * 12;
 
     // DEPENSES
@@ -230,7 +244,7 @@ const Immo = () => {
   return (
     <div className="immo">
       <div className="scrapper">
-        <TextField name="adId" label="Id de l'offre leboncoin" type="number" defaultValue={adId} onChange={(e) => setAdId(parseInt(e.target.value))}/>
+        <TextField name="adId" label="Id de l'offre leboncoin" type="string" defaultValue={adId} onChange={(e) => setAdId(parseInt(extractId(e.target.value)))}/>
         {adId &&
           <a href={`https://www.leboncoin.fr/ad/ventes_immobilieres/${adId}`} target="_blank" rel="noopener noreferrer">
             <Button variant="outlined">VOIR L'ANNONCE</Button>
