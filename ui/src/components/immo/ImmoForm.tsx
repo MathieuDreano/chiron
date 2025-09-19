@@ -28,12 +28,9 @@ const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
 
   const fraisAchat = (form.prixVente - form.fraisAgence)*0.08
   const apport = fraisAchat + form.fraisAgence + form.fraisDivers;
-  console.log("totalAchat", totalAchat, "apport", apport);
   const pourcentApport = apport * 100 /totalAchat;
-  console.log("pourcentApport", pourcentApport);
     
   const loyerMensuelEstime = estimateLoyer(form.superficie);
-  console.log(`Loyer estimé : ${loyerMensuelEstime} € / mois`);
 
   const montantCredit = totalAchat-apport;
  

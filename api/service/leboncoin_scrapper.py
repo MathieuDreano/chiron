@@ -99,20 +99,20 @@ def extract_with_prompt(text: str) -> dict:
             dict: Dictionnaire contenant prixVente, fraisAgence, loyers, taxeFonciere et charges
     """
     prompt = f"""
-        You are a real estate data extractor.  
-        Analyze the ad text and return only a strictly valid JSON with the following keys:
+        Vous êtes un extracteur de données immobilières.
+        Analysez le texte de l’annonce et retournez uniquement un JSON strictement valide avec les clés suivantes :
 
-        - prixVente: total sale price of the property (in euros, integer)  
-        - superficie: nombe de m²
-        - fraisAgence: agency fees amount (in euros, integer)  
-        - loyers: current monthly rent (in euros, integer)  
-        - taxeFonciere: annual property tax (in euros, integer)  
-        - charges: annual condominium charges (in euros, integer)  
+        - prixVente : prix total de vente du bien (en euros, entier)
+        - superficie : nombre de m²
+        - fraisAgence : montant des frais d’agence (en euros, entier)
+        - loyers : loyer mensuel actuel (en euros, entier)
+        - taxeFonciere : taxe foncière mensuelle (en euros, entier)
+        - charges : charges mensuelles de copropriété (en euros, entier)
 
-        If a piece of information is not present in the ad, set it to `null`.  
-        Do not return anything other than the raw JSON.
+        Si une information n’est pas présente dans l’annonce, mettez-la à null.
+        Ne retournez rien d’autre que le JSON brut.
 
-        ### Ad text to analyze:
+        ### Texte de l’annonce à analyser :
         \"\"\"
         {text}
         \"\"\"
