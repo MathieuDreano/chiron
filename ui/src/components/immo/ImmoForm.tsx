@@ -7,31 +7,12 @@ type ImmoFormProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-function getPrixM2(superficie: number) {
-  // Adjust €/m² so small apartments have higher rates
-  if (superficie <= 16) return 25;        // 16 m² → 400€
-  if (superficie <= 20) return 24;        // slightly lower for 17-20 m²
-  if (superficie <= 30) return 22;        // medium size
-  return 20;                              // larger apartments
-}
-
-function estimateLoyer(superficie: number) {
-  return Math.round(superficie * getPrixM2(superficie));
-}
-
 const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
 
-  const totalAchat = 
-    form.prixVente +
-    form.fraisDivers +
-    form.fraisRenovation || 0;
-
   const fraisAchat = (form.prixVente - form.fraisAgence)*0.08
+  const totalAchat = form.prixVente + fraisAchat + form.fraisDivers + form.fraisRenovation;
   const apport = fraisAchat + form.fraisAgence + form.fraisDivers;
   const pourcentApport = apport * 100 /totalAchat;
-    
-  const loyerMensuelEstime = estimateLoyer(form.superficie);
-
   const montantCredit = totalAchat-apport;
  
   return (
@@ -40,7 +21,7 @@ const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
             <Typography variant="h6">Coût achat ({totalAchat}€)</Typography>
             <div style={{ display: "flex",  flexWrap: "wrap", gap: "1em", flexDirection: "row" }}>
                 <TextField name="prixVente" label="Prix de vente FAI" type="number" value={form.prixVente} onChange={onChange}/>
-                <Tooltip arrow title="(prixVente - fraisAgence)*0.08">
+                <Tooltip arrow title="8% du prix de vente hors frais d'agence">
                     <TextField name="fraisAchat" label="Frais d'achat" type="number" value={fraisAchat} disabled/>
                 </Tooltip>
                 <TextField name="fraisAgence" label="Frais d'agence" type="number" value={form.fraisAgence} onChange={onChange}/>
@@ -71,8 +52,8 @@ const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
         <div>
             <Typography variant="h6">Revenus (€)</Typography>
             <div style={{ display: "flex",  flexWrap: "wrap", gap: "1em", flexDirection: "row" }}>
-                <TextField name="loyer" label="Revenus de locations (par mois)" type="number" value={form.loyer || loyerMensuelEstime || 0} onChange={onChange}/>
-                <TextField name="autresRevenus" label="Autres revenus (par mois)" type="number" onChange={onChange}/>
+                <TextField name="loyer" label="Revenus de locations (par mois)" type="number" value={form.loyer} onChange={onChange}/>
+                <TextField name="autresRevenus" label="Autres revenus (par mois)" type="number"  value={form.autresRevenus} onChange={onChange}/>
                 <TextField name="vacance" label="Taux de vacances (%)" type="number" value={form.vacance} onChange={onChange}/>
                 <TextField name="croissanceRevenus" label="Croissance revenus (%)" type="number" value={form.croissanceRevenus} onChange={onChange}/>
             </div>
@@ -81,12 +62,12 @@ const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
         <div>
             <Typography variant="h6">Dépenses (€)</Typography>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "1em", flexDirection: "row" }}>
-                <TextField name="chargesLocatives" label="Charges locatives récupérables" type="number" value={form.chargesLocatives} onChange={onChange}/>
-                <TextField name="admin" label="Dépenses d'administration (par mois)" type="number" onChange={onChange}/>
-                <TextField name="gestion" label="Dépenses de gestion (par mois)" type="number" value={form.gestion} onChange={onChange}/>
-                <TextField name="entretien" label="Dépenses d'entretien (par mois)" type="number" onChange={onChange}/>
-                <TextField name="taxeFonciere" label="Taxes (par mois)" type="number" value={form.taxeFonciere} onChange={onChange}/>
-                <TextField name="servicesPublics" label="Dépenses services publics (par mois)" type="number" onChange={onChange}/>
+                <TextField  name="chargesLocatives" label="Charges locatives récupérables" type="number" value={form.chargesLocatives} onChange={onChange}/>
+                <TextField name="admin" label="Dépenses d'administration (par mois)" type="number" value={form.admin} onChange={onChange}/>
+                <TextField name="gestion" label="Dépenses de gestion (par mois)" type="number" value={form.entretien} onChange={onChange}/>
+                <TextField name="entretien" label="Dépenses d'entretien (par mois)" type="number" value={form.gestion}  onChange={onChange}/>
+                <TextField name="taxeFonciere" label={`Taxes foncière (soit ${form.taxeFonciere * 12}/an)`} type="number" value={form.taxeFonciere} onChange={onChange}/>
+                <TextField name="servicesPublics" label="Dépenses services publics (par mois)" type="number" value={form.servicesPublics}  onChange={onChange}/>
                 <TextField name="croissanceDepenses" label="Croissance dépenses (%)" type="number" value={form.croissanceDepenses} onChange={onChange}/>
             </div>
         </div>

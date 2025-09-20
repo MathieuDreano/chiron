@@ -5,19 +5,8 @@ import ImmoForm from "./ImmoForm";
 import ImmoSummary from "./ImmoSummary";
 import './immo.css'
 import { Button, CircularProgress, TextField, Typography } from "@mui/material";
-
-export type CashflowData = {
-      totalAchat: number,
-      apport: number,
-      mensualite: number,
-      revenusMensuelBrut: number,
-      revenuNetMensuel: number,
-      totalDepense: number,
-      impotsBenefices: number
-      cashflowMensuel: number,
-      rentabiliteBrute: number,
-      rentabiliteNette: number,
-    }
+import { cashflow500, type CashflowData } from "./useCashflow500";
+import { useLeboncoin } from "./useLeboncoin";
 
 export type ImmoFormData = {
   prixVente: number;
@@ -39,6 +28,7 @@ export type ImmoFormData = {
 
   chargesLocatives: number;
   gestion: number;
+  admin: number;
   entretien: number;
   taxeFonciere: number;
   servicesPublics: number;
@@ -68,6 +58,7 @@ const defaultFormData: ImmoFormData = {
 
     chargesLocatives: 0,
     gestion: 0,
+    admin: 0,
     entretien: 0,
     taxeFonciere: 0,
     servicesPublics: 0,
@@ -77,51 +68,8 @@ const defaultFormData: ImmoFormData = {
     crl: 2.5, //(%)
 };
 
-function calculImpotBenefices(resultatFiscal: number, tauxImpot: number) {
-  if (resultatFiscal <= 0) {
-    return 0;
-  } else if (resultatFiscal <= 42500) {
-    return tauxImpot * resultatFiscal / 100;
-  } else {
-    return 42500 * tauxImpot /100 + (resultatFiscal - 42500) * 0.25;
-  }
-}
-
-function calculamortissement(prixVenteFAI: number, fraisAchat: number, fraisAgence: number, fraisRenovation: number) {
-  const base = (prixVenteFAI + fraisAchat + fraisAgence) * 0.75;
-
-  const part1 = (base * 0.3636) / 30;
-  const part2 = (base * 0.1061) / 20;
-  const part3 = (base * 0.2121) / 15;
-  const part4 = (base * 0.3182) / 10;
-
-  return (part1 + part2 + part3 + part4) / 12 + fraisRenovation / 10;
-}
-
-function calculateMonthlyInterests(totalAchat: number, apport: number, form: ImmoFormData) {
-  const monthlyRate = form.tauxInteret / 100 / 12;
-  const montantCredit = totalAchat - apport;
-  const mensualiteHorsAssurance = monthlyRate > 0
-    ? (montantCredit * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -form.duree))
-    : montantCredit / form.duree;
-
-  let remainingPrincipal = montantCredit;
-  const interests = [];
-
-  for (let month = 1; month <= form.duree; month++) {
-    const interest = remainingPrincipal * monthlyRate;
-    interests.push(interest);
-    const principalPayment = mensualiteHorsAssurance - interest;
-    remainingPrincipal -= principalPayment;
-  }
-
-  return interests; // array of monthly interests
-}
-
 function extractId(input: string) {
-  // Ensure input is a string and trim whitespace
   const value = input.toString().trim();
-
   // Regex to match digits at the end of the URL or a raw ID
   const match = value.match(/(\d+)$/);
   if (match) {
@@ -131,65 +79,36 @@ function extractId(input: string) {
   }
 }
 
-function calculerTaxeFonciere(valeurLocativeBruteAnnuelle: number) {
-  // Taux en pourcentage
-  const tauxMunicipal = 46.3; // en %
-  const tauxMetropolitain = 6.41; // en %
-
-  // Base imposable = moitié de la valeur locative brute
-  const baseImposable = valeurLocativeBruteAnnuelle / 2;
-
-  // Calcul de la taxe
-  const taxe = baseImposable * (tauxMunicipal + tauxMetropolitain) / 100;
-  console.log("taxe fonciere estimée", taxe);
-  return taxe;
-}
-
 const Immo = () => {
-  
-  const [adId, setAdId] = useState<number>(() => {
-    const saved = localStorage.getItem("adId");
-    return saved ? JSON.parse(saved) : "";
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [scrappedData, setScrappedData] = useState<string>();
+
+  const {adId, setAdId, load_data_from_ad, isLoading, scrappedData} = useLeboncoin();
+
   const [form, setForm] = useState<ImmoFormData>(() => {
     const saved = localStorage.getItem("formData");
     return saved ? JSON.parse(saved) : defaultFormData;
   });
-  
-  // Sauvegarde form à chaque modification
+
+  const summaryData = useMemo((): CashflowData => cashflow500(form), [form]);
+
+  // Sauvegarde form à chaque modification, delais de 5s
   useEffect(() => {
     const handler = setTimeout(() => localStorage.setItem("formData", JSON.stringify(form)), 5000);
     return () => clearTimeout(handler);
   }, [form]);
-  useEffect(() => {
-    const handler = setTimeout(() => localStorage.setItem("adId", JSON.stringify(adId)), 5000);
-    return () => clearTimeout(handler);
-  }, [adId]);
 
-  const load_data_from_ad = (adId: number) => {
-      const api_base_url = "https://chiron-mz2f.onrender.com";
-      //const api_base_url = "http://localhost:8000";
-      setIsLoading(true)
-      return fetch(`${api_base_url}/leboncoin/scrap/${adId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          const jsonData = JSON.parse(data);
-          setForm((prev: ImmoFormData) => ({
-            ...prev,
-            prixVente: jsonData.prixVente ?? 0,
-            fraisAgence: jsonData.fraisAgence ?? 0,
-            loyer: jsonData.loyers ?? 0,
-            superficie: jsonData.superficie ?? 0,
-            taxeFonciere: jsonData.taxeFonciere ?? 0,
-            chargesLocatives: jsonData.charges ?? 0,
-          }));
-          setScrappedData({...jsonData})
-        })
-        .catch((err) => console.error(err))
-        .finally(() => setIsLoading(false));
-  }
+  useEffect(() => {
+    if (scrappedData) {
+      setForm((prev: ImmoFormData) => ({
+        ...prev,
+        prixVente: scrappedData.prixVente ?? prev.prixVente,
+        fraisAgence: scrappedData.fraisAgence ?? prev.fraisAgence,
+        loyer: scrappedData.loyers ?? prev.loyer,
+        superficie: scrappedData.superficie ?? prev.superficie,
+        taxeFonciere: scrappedData.taxeFonciere ?? prev.taxeFonciere,
+        chargesLocatives: scrappedData.charges ?? prev.chargesLocatives,
+      }));
+    }
+  }, [scrappedData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -198,62 +117,6 @@ const Immo = () => {
       [name]: parseFloat(value) || 0,
     }));
   };
-
-  const results = useMemo((): CashflowData => {
-
-    // ACHAT
-    const fraisAchat = (form.prixVente - form.fraisAgence)*0.08
-    const totalAchat = (form.prixVente + fraisAchat + form.fraisDivers + form.fraisRenovation) || 0;
-    
-    // PRET
-    const apport = fraisAchat + form.fraisAgence + form.fraisDivers;
-    const monthlyRate = form.tauxInteret / 100 / 12;
-    const montantCredit = totalAchat-apport;
-    const mensualiteHorsAssurance = monthlyRate > 0
-        ? (montantCredit * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -form.duree))
-        : montantCredit / form.duree;
-    const interets = calculateMonthlyInterests(totalAchat, apport, form)
-    const mensualiteAssurance = montantCredit * form.tauxAssurance / 100 / 12;
-    const mensualite =  mensualiteHorsAssurance + mensualiteAssurance;
-
-    // REVENUS
-    console.log("loyer", form.loyer);
-    const revenusMensuels = form.loyer + form.autresRevenus;
-    const loyerVacance = form.loyer * form.vacance;
-    const revenusMensuelBrut = revenusMensuels - loyerVacance - form.chargesLocatives;
-    console.log(revenusMensuelBrut, revenusMensuels, loyerVacance, form.chargesLocatives)
-    const revenuAnnuelBrut = revenusMensuelBrut * 12;
-
-    // DEPENSES
-    const taxesFonciereEtCrl = (form.loyer - form.chargesLocatives) * form.crl / 100 + (form.taxeFonciere || (calculerTaxeFonciere(revenuAnnuelBrut) / 12));
-    const depensesMensuelles = form.chargesLocatives + form.gestion + form.entretien + taxesFonciereEtCrl + form.servicesPublics;    
-    const revenuNetMensuel = revenusMensuels - depensesMensuelles;
-    const revenuAnnuelNet = revenuNetMensuel * 12;
-    
-    // IMPOTS
-    const resultatFiscal = revenuNetMensuel - calculamortissement(form.prixVente, form.fraisDivers, form.fraisAgence, form.fraisRenovation) - interets[0]
-    console.log('resultatFiscal', resultatFiscal)
-    const impotsBenefices = calculImpotBenefices(resultatFiscal, form.tauxImpotBenefices)
-    console.log('impotsBenefices', impotsBenefices)
-
-    // CASHFLOW & RENTA
-    const cashflowMensuel = revenuNetMensuel - mensualite;      
-    const rentabiliteBrute = totalAchat > 0 ? (revenuAnnuelBrut / totalAchat) * 100 : 0;
-    const rentabiliteNette = totalAchat > 0 ? (revenuAnnuelNet / totalAchat) * 100 : 0;
-
-    return {
-      totalAchat,
-      apport,
-      mensualite,
-      revenusMensuelBrut,
-      revenuNetMensuel,
-      impotsBenefices,
-      totalDepense: depensesMensuelles,
-      cashflowMensuel,
-      rentabiliteBrute,
-      rentabiliteNette,
-    };
-  }, [form]);
 
   return (
     <div className="immo">
@@ -271,7 +134,7 @@ const Immo = () => {
         }
       </div>
       {scrappedData && <Typography>{JSON.stringify(scrappedData, null, 2)}</Typography>}
-      <ImmoSummary  {...results}/>
+      <ImmoSummary  {...summaryData}/>
       <ImmoForm form={form} onChange={handleChange}/>
     </div>
   );
