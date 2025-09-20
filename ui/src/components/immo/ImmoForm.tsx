@@ -64,8 +64,8 @@ const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
             <div style={{ display: "flex", flexWrap: "wrap", gap: "1em", flexDirection: "row" }}>
                 <TextField  name="chargesLocatives" label="Charges locatives récupérables" type="number" value={form.chargesLocatives} onChange={onChange}/>
                 <TextField name="admin" label="Dépenses d'administration (par mois)" type="number" value={form.admin} onChange={onChange}/>
-                <TextField name="gestion" label="Dépenses de gestion (par mois)" type="number" value={form.entretien} onChange={onChange}/>
-                <TextField name="entretien" label="Dépenses d'entretien (par mois)" type="number" value={form.gestion}  onChange={onChange}/>
+                <TextField name="gestion" label="Dépenses de gestion (par mois)" type="number" value={form.gestion} onChange={onChange}/>
+                <TextField name="entretien" label="Dépenses d'entretien (par mois)" type="number" value={form.entretien}  onChange={onChange}/>
                 <TextField name="taxeFonciere" label={`Taxes foncière (soit ${form.taxeFonciere * 12}/an)`} type="number" value={form.taxeFonciere} onChange={onChange}/>
                 <TextField name="servicesPublics" label="Dépenses services publics (par mois)" type="number" value={form.servicesPublics}  onChange={onChange}/>
                 <TextField name="croissanceDepenses" label="Croissance dépenses (%)" type="number" value={form.croissanceDepenses} onChange={onChange}/>
