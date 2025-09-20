@@ -24,11 +24,8 @@ export const cashflow500 = (form: ImmoFormData): CashflowData => {
     // PRET
     const apport = fraisAchat + form.fraisAgence + form.fraisDivers;
     const montantCredit = totalAchat - apport;
-    const monthlyRate = form.tauxInteret / 100 / 12;
-    const mensualite1 = (montantCredit * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -form.duree))
     const interets = calculateMonthlyInterests(totalAchat, apport, form)
     const mensualite = calculMensualite(montantCredit, form.tauxInteret, form.duree, form.tauxAssurance)
-    console.log(mensualite1, mensualite);
 
     // REVENUS
     const revenusMensuelsChargesComprises = form.loyer;
@@ -71,7 +68,6 @@ export const cashflow500 = (form: ImmoFormData): CashflowData => {
 };
 
 function calculMensualite(montant: number, tauxAnnuel: number, dureeMois: number, tauxAssuranceAnnuel = 0) {
-  console.log(montant, tauxAnnuel, dureeMois, tauxAssuranceAnnuel)
   const tauxMensuel = tauxAnnuel / 100 / 12;
   const assuranceMensuelle = (montant * (tauxAssuranceAnnuel / 100)) / 12;
 

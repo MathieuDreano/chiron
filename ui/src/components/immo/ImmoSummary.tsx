@@ -1,7 +1,6 @@
 import { Card, CardContent, Container, Divider, Grid, Tooltip, Typography } from "@mui/material";
 import type { CashflowData } from "./useCashflow500";
 const ImmoSummary = (data: CashflowData) => {
-  console.log('summaryData', data);
   const statusClassName = (data.cashflowMensuel > 0) ? "positive" : "negative"
   return (
     <Card className={`immo-summary ${statusClassName}`}>
@@ -37,6 +36,8 @@ const ImmoSummary = (data: CashflowData) => {
               </Grid>
             </Tooltip>
           </Container>
+
+          <Divider sx={{ my: 2 }} />
 
           <Container
             sx={{
@@ -74,6 +75,7 @@ const ImmoSummary = (data: CashflowData) => {
             </Tooltip>
           </Container>
 
+          <Divider sx={{ my: 2 }} />
 
           <Grid
             container
