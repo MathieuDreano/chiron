@@ -120,6 +120,9 @@ const ImmoSummary = (data: CashflowData) => {
             </Grid>
           </Tooltip>
         </Container>
+
+        {data.cashflowMensuel > 0 ? (<Typography fontSize={30}>💰</Typography>) : (<Typography fontSize={30}>😟</Typography>)}
+
       </CardContent>
     </Card>
   );
