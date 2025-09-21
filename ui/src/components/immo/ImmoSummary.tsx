@@ -56,8 +56,8 @@ const ImmoSummary = (data: CashflowData) => {
             </Tooltip>
 
             <Grid sx={{ flex: 1, textAlign: "center" }}>
-              <Typography>Taxe fonciere annuelle</Typography>
-              <Typography>{(data.taxeFonciereMensuelle * 12).toFixed(0)} €</Typography>
+              <Typography>Taxe fonciere annuelle + CRL (mensualisé)</Typography>
+              <Typography>{(data.taxesCrlEtFonciereMensuelle).toFixed(0)} €</Typography>
             </Grid>
 
             <Tooltip arrow title="charges locatives + gestion + entretien + impôts locaux + services publics">

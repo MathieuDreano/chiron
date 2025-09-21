@@ -6,7 +6,7 @@ export type CashflowData = {
       mensualite: number,
       revenusMensuelBrut: number,
       revenuMensuelNet: number,
-      taxeFonciereMensuelle: number,
+      taxesCrlEtFonciereMensuelle: number,
       depensesMensuelles: number,
       resultatFiscal: number
       impotsBenefices: number
@@ -34,9 +34,12 @@ export const cashflow500 = (form: ImmoFormData): CashflowData => {
     const revenuAnnuelBrut = revenusMensuelBrut * 12;
 
     // DEPENSES
-    const taxeFonciereMensuelle = form.taxeFonciere || (calculerTaxeFonciereAnnuelle(revenuAnnuelBrut) / 12)
+    const taxeFonciereMensuelleEstimee = (calculerTaxeFonciereAnnuelle(revenuAnnuelBrut) / 12);
+    const taxeFonciereMensuelle = form.taxeFonciere;// || (calculerTaxeFonciereAnnuelle(revenuAnnuelBrut) / 12)
+    console.log("taxeFonciereMensuelle", taxeFonciereMensuelle, "taxeFonciereMensuelleEstimee", taxeFonciereMensuelleEstimee);
     const taxesCrlEtFonciere = revenuAnnuelBrut * form.crl / 100 / 12 + taxeFonciereMensuelle;
-    const depensesMensuelles = form.chargesLocatives +form.admin + form.gestion + form.entretien + taxesCrlEtFonciere + form.servicesPublics;
+    const taxesCrlEtFonciereMensuelle = taxesCrlEtFonciere / 12;
+    const depensesMensuelles = form.admin + form.gestion + form.entretien + taxesCrlEtFonciere + form.servicesPublics;
 
     // NET
     const revenuMensuelNet = revenusMensuelsChargesComprises - depensesMensuelles;
@@ -57,7 +60,7 @@ export const cashflow500 = (form: ImmoFormData): CashflowData => {
         mensualite,
         revenusMensuelBrut,
         revenuMensuelNet,
-        taxeFonciereMensuelle,
+        taxesCrlEtFonciereMensuelle,
         depensesMensuelles,
         impotsBenefices,
         resultatFiscal,
