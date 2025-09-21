@@ -23,7 +23,8 @@ export const useLeboncoin = () => {
     }, [adId]);
 
     const load_data_from_ad = (adId: number) => {
-      const api_base_url = "https://chiron-mz2f.onrender.com";
+      //const api_base_url = "https://chiron-mz2f.onrender.com";
+      const api_base_url = "https://chiron-n6kw2.ondigitalocean.app"
       //const api_base_url = "http://localhost:8000";
       setIsLoading(true)
       return fetch(`${api_base_url}/leboncoin/scrap/${adId}`)

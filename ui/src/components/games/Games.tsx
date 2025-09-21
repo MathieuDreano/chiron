@@ -13,7 +13,8 @@ export type Game = {
   playtime: string;    // e.g. "60-120 min"
 };
 
-const api_base_url = "https://chiron-mz2f.onrender.com";
+//const api_base_url = "https://chiron-mz2f.onrender.com";
+const api_base_url = "https://chiron-n6kw2.ondigitalocean.app"
 //const api_base_url = "http://localhost:8000";
 
 const Games = () => {
