@@ -65,6 +65,7 @@ cookies = {
 def get_form_data_from_ad_id(ad_id: int):
 
     url = f"https://www.leboncoin.fr/ad/ventes_immobilieres/{ad_id}"
+    print(f"{url}")
     response = requests.get(url, headers=headers, cookies=cookies)
 
     if response.status_code != 200:
@@ -84,8 +85,41 @@ def get_form_data_from_ad_id(ad_id: int):
     # Navigate to "props" -> "pageProps" -> "ad"
     ad_data = data.get("props", {}).get("pageProps", {}).get("ad", {})
     scrapped_data = extract_with_prompt(ad_data)
-    print(scrapped_data)
+    scrapped_data = json.loads(scrapped_data)
+
+    # Add the image URL
+    imageUrl = ad_data.get("images", {}).get("thumb_url")
+    scrapped_data["imageUrl"] = imageUrl
+
     return scrapped_data
+
+def get_image_from_ad_id(ad_id: int):
+
+    url = f"https://www.leboncoin.fr/ad/ventes_immobilieres/{ad_id}"
+    print(f"{url}")
+    response = requests.get(url, headers=headers, cookies=cookies)
+
+    if response.status_code == 404:
+        print(f"Ad {ad_id} not found (404).")
+        return None  # or raise an exception, or continue depending on your use case
+
+    if response.status_code != 200:
+        print("Failed request:", response.status_code, response.text)
+        return None  # or handle differently
+#        exit()
+
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    # Leboncoin injects JSON inside <script id="__NEXT_DATA__"> ... </script>
+    script_tag = soup.find("script", {"id": "__NEXT_DATA__"})
+    if not script_tag:
+        print("No JSON script found")
+        exit()
+
+    data = json.loads(script_tag.string)
+
+    # Navigate to "props" -> "pageProps" -> "ad"
+    return data.get("props", {}).get("pageProps", {}).get("ad", {}).get("images", {}).get("thumb_url")
 
 
 def extract_with_prompt(text: str) -> dict:
@@ -105,7 +139,8 @@ def extract_with_prompt(text: str) -> dict:
         - superficie : nombre de m²
         - fraisAgence : montant des frais d'agence (en euros, entier)
         - loyers : loyer mensuel actuel, charges comprises (en euros, entier)
-        - taxeFonciere : taxe foncière mensuelle (en euros, entier)
+        - taxeFonciere : taxe foncière annuelle (en euros, entier)
+        - taxeFonciereMensuelle : taxe foncière mensuelle (en euros, entier)
         - charges : charges mensuelles de copropriété (en euros, entier)
 
         Si une information n'est pas présente dans l'annonce, mettez-la à null.
@@ -126,6 +161,5 @@ def to_raw_json(text: str):
     match = re.search(r'\{.*\}', text, re.DOTALL)
     if match:
         raw_json = match.group(0)
-        print(raw_json)
         return raw_json
     return "{}"

@@ -6,39 +6,61 @@ export type ScrappedData = {
   loyers: number;
   superficie: number;
   taxeFonciere: number;
+  taxeFonciereMensuelle: number;
   charges: number;
-}
+  imageUrl: string;
+};
+
+//const api_base_url = "https://chiron-mz2f.onrender.com";
+const api_base_url = "https://chiron-n6kw2.ondigitalocean.app"
+//const api_base_url = "http://localhost:8000";
 
 export const useLeboncoin = () => {
-    const [adId, setAdId] = useState<number>(() => {
-        const saved = localStorage.getItem("adId");
-        return saved ? JSON.parse(saved) : "";
-    });
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [scrappedData, setScrappedData] = useState<ScrappedData>();
+  const [adId, setAdId] = useState<string>(() => {
+    const saved = localStorage.getItem("adId");
+    return saved ? JSON.parse(saved) : "";
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [image, setImage] = useState<string>();
+  const [scrappedData, setScrappedData] = useState<ScrappedData>();
 
-    useEffect(() => {
-        const handler = setTimeout(() => localStorage.setItem("adId", JSON.stringify(adId)), 5000);
-        return () => clearTimeout(handler);
-    }, [adId]);
+  useEffect(() => {
+    const handler = setTimeout(
+      () => {if (adId) localStorage.setItem("adId", JSON.stringify(adId))},
+      5000
+    );
+    console.log(adId)
+    if (adId != undefined && adId.length == 10) {
+      get_image_from_ad(parseInt(adId));
+    } else {
+      setImage(undefined);
+    }
+    return () => clearTimeout(handler);
+  }, [adId]);
 
-    const load_data_from_ad = (adId: number) => {
-      //const api_base_url = "https://chiron-mz2f.onrender.com";
-      const api_base_url = "https://chiron-n6kw2.ondigitalocean.app"
-      //const api_base_url = "http://localhost:8000";
-      setIsLoading(true)
-      return fetch(`${api_base_url}/leboncoin/scrap/${adId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          const jsonData: ScrappedData = JSON.parse(data);
-          
-          setScrappedData({...jsonData})
-        })
-        .catch((err) => console.error(err))
-        .finally(() => setIsLoading(false));
-  }
+  const load_data_from_ad = (adId: number) => {
+    setIsLoading(true);
+    return fetch(`${api_base_url}/leboncoin/${adId}/scrap`)
+      .then((res) => res.json())
+      .then((data) => setScrappedData(data))
+      .catch((err) => console.error(err))
+      .finally(() => setIsLoading(false));
+  };
+
+  const get_image_from_ad = (adId: number) => {
+    return fetch(`${api_base_url}/leboncoin/${adId}/image`)
+      .then((res) => res.json())
+      .then((data) => setImage(data))
+      .catch((err) => console.error(err))
+  };
 
   return {
-    adId, setAdId, load_data_from_ad, isLoading, scrappedData
-  }
-}
+    adId,
+    setAdId,
+    load_data_from_ad,
+    image,
+    get_image_from_ad,
+    isLoading,
+    scrappedData,
+  };
+};

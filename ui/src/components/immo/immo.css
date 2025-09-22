@@ -12,6 +12,26 @@
   margin: auto;
 }
 
+.scrapper-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  margin: auto;
+}
+
+.scrapper-form-buttons {
+  display: flex;
+  gap: 1em;
+}
+
+.scrapper-data {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin: auto;
+}
+
 .immo-form {
     padding-inline: 1em;
 }

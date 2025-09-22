@@ -35,9 +35,8 @@ export const cashflow500 = (form: ImmoFormData): CashflowData => {
 
     // DEPENSES
     const taxeFonciereMensuelleEstimee = (calculerTaxeFonciereAnnuelle(revenuAnnuelBrut) / 12);
-    const taxeFonciereMensuelle = form.taxeFonciere;// || (calculerTaxeFonciereAnnuelle(revenuAnnuelBrut) / 12)
-    console.log("taxeFonciereMensuelle", taxeFonciereMensuelle, "taxeFonciereMensuelleEstimee", taxeFonciereMensuelleEstimee);
-    const taxesCrlEtFonciereMensuelle = revenuAnnuelBrut * form.crl / 100 / 12 + taxeFonciereMensuelle;
+    console.log("taxeFonciereMensuelle", form.taxeFonciereMensuelle, "taxeFonciereMensuelleEstimee", taxeFonciereMensuelleEstimee);
+    const taxesCrlEtFonciereMensuelle = revenuAnnuelBrut * form.crl / 100 / 12 + form.taxeFonciereMensuelle;
     const depensesMensuelles = form.admin + form.gestion + form.entretien + taxesCrlEtFonciereMensuelle + form.servicesPublics;
 
     // NET
