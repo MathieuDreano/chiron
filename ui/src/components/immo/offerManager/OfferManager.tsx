@@ -12,8 +12,8 @@ type Offer = {
 };
 
 //const api_base_url = "https://chiron-mz2f.onrender.com";
-const api_base_url = "https://chiron-n6kw2.ondigitalocean.app";
-//const api_base_url = "http://localhost:8000";
+//const api_base_url = "https://chiron-n6kw2.ondigitalocean.app";
+const api_base_url = "http://localhost:8000";
 
 const OfferManager: React.FC = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
@@ -117,7 +117,7 @@ const OfferManager: React.FC = () => {
         Add Offer
       </Button>
 
-      {/* {!offers || offers.length === 0 ? (
+      {!offers || offers.length === 0 ? (
         <Typography>No offer to display</Typography>
       ) : (
         <div>
@@ -134,31 +134,19 @@ const OfferManager: React.FC = () => {
               <h3>{offer.title}</h3>
               <p>Price: {offer.price} €</p>
               <p>{offer.description}</p>
-              {offer.imageUrl && (
-                <img
-                  src={offer.imageUrl}
-                  alt={offer.title}
-                  style={{ maxWidth: "100%" }}
-                />
-              )}
+              {offer.imageUrl && (<img src={offer.imageUrl} alt={offer.title} style={{ maxWidth: "100%" }}/>)}
               <div style={{ marginTop: "5px" }}>
-                <Button
-                  variant="outlined"
-                  onClick={() => toggleOfferFlag(offer.id, "visited")}
-                >
+                <Button variant="outlined" onClick={() => toggleOfferFlag(offer.id, "visited")}>
                   {offer.visited ? "Visited ✅" : "Mark as Visited"}
                 </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => toggleOfferFlag(offer.id, "called")}
-                >
+                <Button variant="outlined" onClick={() => toggleOfferFlag(offer.id, "called")}>
                   {offer.called ? "Called ✅" : "Mark as Called"}
                 </Button>
               </div>
             </div>
           ))}
         </div>
-      )} */}
+      )}
     </div>
   );
 };

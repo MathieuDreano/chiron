@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useLeboncoin, type ScrappedData } from "./useLeboncoin";
-import { TextField, Button, CircularProgress, Typography } from "@mui/material";
+import { useLeboncoin, type ScrappedData } from "../useLeboncoin";
+import { TextField, Button, CircularProgress, Typography, Grid } from "@mui/material";
 
 function extractId(input: string) {
   const value = input.toString().trim();
@@ -26,35 +26,40 @@ const LeboncoinScrapping = ({ onScrapped }: { onScrapped: (scrappedData: Scrappe
   return (
     <div className="scrapper">
       {image && <img src={image} alt="thumbnail offre leboncoin" />}
-      <div className="scrapper-form">
-        <TextField
-          name="adId"
-          label="Id de l'offre leboncoin"
-          type="string"
-          defaultValue={adId}
-          onChange={(e) => setAdId(extractId(e.target.value))}
-        />
-        <div className="scrapper-form-buttons">
-          {adId && (
-            <a
-              href={`https://www.leboncoin.fr/ad/ventes_immobilieres/${adId}`}
-              target="_blank"
-              rel="noopener noreferrer"
+      <Grid container spacing={1}>
+        <Grid size={12}>
+          <TextField
+            name="adId"
+            label="Id de l'offre leboncoin"
+            type="string"
+            defaultValue={adId}
+            fullWidth
+            onChange={(e) => setAdId(extractId(e.target.value))}
+          />
+        </Grid>
+        <Grid container size={12} spacing={1} alignItems="stretch">
+          <Grid size={6}>
+            <Button
+              variant="outlined"
+              onClick={() => {window.open(`https://www.leboncoin.fr/ad/ventes_immobilieres/${adId}`, "_blank")}}
+              disabled={!adId}
+              fullWidth
             >
-              <Button variant="outlined">
-                VOIR L'ANNONCE<br />👀
-              </Button>
-            </a>
-          )}
-          <Button
-            variant="outlined"
-            onClick={() => adId && load_data_from_ad(parseInt(adId))}
-            disabled={!adId || isLoading}
-          >
-            EXTRAIRE DONNEES<br />✨
-          </Button>
-        </div>
-      </div>
+              VOIR L'ANNONCE<br />👀
+            </Button>
+          </Grid>
+          <Grid size={6}>
+            <Button
+              variant="outlined"
+              onClick={() => adId && load_data_from_ad(parseInt(adId))}
+              disabled={!adId || isLoading}
+              fullWidth
+            >
+              EXTRAIRE DONNEES<br />✨
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
       <div className="scrapper-data">
         {isLoading && <CircularProgress />}
         {(!isLoading && scrappedData) && (

@@ -1,8 +1,9 @@
 import './App.css'
-import { HomeRoute } from './pages/Home'
-import { StackRoute } from './pages/Stack'
-import { GamesRoute } from './pages/Games'
-import { ImmoRoute } from './pages/Immo'
+import { HomeRoute } from './pages/HomePage'
+import { StackRoute } from './pages/StackPage'
+import { GamesRoute } from './pages/GamesPage'
+import { OffersRoute } from './pages/OffersPage'
+import { SimulatorRoute } from './pages/SimulatorPage'
 import { StrictMode } from 'react'
 import {
   Outlet,
@@ -24,7 +25,7 @@ export const RootRoute = createRootRoute({
   ),
 })
 
-const routeTree = RootRoute.addChildren([HomeRoute, StackRoute, GamesRoute, ImmoRoute])
+const routeTree = RootRoute.addChildren([HomeRoute, StackRoute, GamesRoute, OffersRoute, SimulatorRoute])
 
 const router = createRouter({ routeTree })
 

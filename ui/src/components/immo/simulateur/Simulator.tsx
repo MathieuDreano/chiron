@@ -1,13 +1,12 @@
 //import { useState, useEffect } from "react"
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ImmoForm from "./ImmoForm";
 import ImmoSummary from "./ImmoSummary";
 import './immo.css'
-import { cashflow500, type CashflowData } from "./useCashflow500";
-import { type ScrappedData } from "./useLeboncoin";
+import { simulate, type CashflowData } from "./useSimulator";
+import { type ScrappedData } from "../useLeboncoin";
 import LeboncoinScrapping from "./LeboncoinScrapping";
-import OfferManager from "./OfferManager";
 
 export type ImmoFormData = {
   prixVente: number;
@@ -69,20 +68,20 @@ const defaultFormData: ImmoFormData = {
     crl: 2.5, //(%)
 };
 
-const Immo = () => {
+const Simulator = () => {
 
   const [form, setForm] = useState<ImmoFormData>(() => {
     const saved = localStorage.getItem("formData");
     return saved ? JSON.parse(saved) : defaultFormData;
   });
 
-  const summaryData = useMemo((): CashflowData => cashflow500(form), [form]);
+  const simulationResults = useMemo((): CashflowData => simulate(form), [form]);
 
   // Sauvegarde form à chaque modification, delais de 5s
-  // useEffect(() => {
-  //   const handler = setTimeout(() => localStorage.setItem("formData", JSON.stringify(form)), 5000);
-  //   return () => clearTimeout(handler);
-  // }, [form]);
+  useEffect(() => {
+    const handler = setTimeout(() => localStorage.setItem("formData", JSON.stringify(form)), 5000);
+    return () => clearTimeout(handler);
+  }, [form]);
 
   console.log('toto');
   const onScrapped = useCallback((scrappedData: ScrappedData) => {
@@ -112,11 +111,10 @@ const Immo = () => {
   return (
     <div className="immo">
       <LeboncoinScrapping onScrapped={onScrapped}/>
-      <ImmoSummary  {...summaryData}/>
+      <ImmoSummary  {...simulationResults}/>
       <ImmoForm form={form} onChange={handleChange}/>
-      <OfferManager />
     </div>
   );
 }
 
-export default Immo
+export default Simulator

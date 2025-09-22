@@ -1,7 +1,8 @@
-import type { ImmoFormData } from "./Immo";
+import type { ImmoFormData } from "./Simulator";
 
 export type CashflowData = {
       totalAchat: number,
+      fraisAchat: number
       apport: number,
       mensualite: number,
       revenusMensuelBrut: number,
@@ -15,7 +16,7 @@ export type CashflowData = {
       rentabiliteNette: number,
 }
 
-export const cashflow500 = (form: ImmoFormData): CashflowData => {
+export const simulate = (form: ImmoFormData): CashflowData => {
 
     // ACHAT
     const fraisAchat = (form.prixVente - form.fraisAgence)*0.08
@@ -54,6 +55,7 @@ export const cashflow500 = (form: ImmoFormData): CashflowData => {
 
     return {
         totalAchat,
+        fraisAchat,
         apport,
         mensualite,
         revenusMensuelBrut,
@@ -132,4 +134,4 @@ function calculamortissement(prixVenteFAI: number, fraisAchat: number, fraisAgen
   return (part1 + part2 + part3 + part4) / 12 + fraisRenovation / 10;
 }
 
-export default cashflow500;
+export default simulate;
