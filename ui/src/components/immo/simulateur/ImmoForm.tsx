@@ -15,7 +15,7 @@ const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
     <div className="immo-form" style={{ display: "flex", flexDirection: "column"}}>
         <div>
             <Typography variant="h6">Coût achat</Typography>
-            <Grid container spacing={1}>
+            <Grid container spacing={1} marginTop={1}>
                 <Grid size={{ xs: 6, md: 2 }}>
                     <TextField name="prixVente" label="Prix de vente FAI" type="number" value={form.prixVente} fullWidth onChange={onChange}/>
                 </Grid>
@@ -37,8 +37,8 @@ const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
         </div>
 
         <div>
-            <Typography variant="h6">Crédit immobilier (€)</Typography>
-            <Grid container spacing={2}>
+            <Typography variant="h6">Crédit immobilier</Typography>
+            <Grid container spacing={2} marginTop={1}>
                 <Grid size={{ xs: 6, md: 4 }}><TextField name="duree" label="Durée du crédit (mois)" type="number" value={form.duree} fullWidth onChange={onChange}/></Grid>
                 <Grid size={{ xs: 6, md: 4 }}><TextField name="tauxInteret" label="Taux d'intérêt (%)" type="number" value={form.tauxInteret} fullWidth onChange={onChange}/></Grid>
                 <Grid size={{ xs: 6, md: 4 }}><TextField name="tauxAssurance" label="Taux d'assurance (%)" type="number" value={form.tauxAssurance} fullWidth onChange={onChange}/></Grid>
@@ -46,13 +46,13 @@ const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
         </div>
 
         <div>
-            <Typography variant="h6">Valorisation du bien ({form.croissanceValeur}%)</Typography>
+            <Typography variant="h6">Valorisation du bien</Typography>
             <TextField name="croissanceValeur" label="% croissance valeur" type="number" value={form.croissanceValeur} fullWidth onChange={onChange}/>
         </div>
 
         <div>
-            <Typography variant="h6">Revenus mensuels (€)</Typography>
-            <Grid container spacing={2}>
+            <Typography variant="h6">Revenus mensuels</Typography>
+            <Grid container spacing={2} marginTop={1}>
                 <Grid size={{ xs: 6, md: 3 }}><TextField name="loyer" label="Loyers charges comprises" type="number" value={form.loyer} fullWidth onChange={onChange}/></Grid>
                 <Grid size={{ xs: 6, md: 3 }}><TextField name="autresRevenus" label="Autres revenus" type="number"  value={form.autresRevenus} fullWidth onChange={onChange}/></Grid>
                 <Grid size={{ xs: 6, md: 3 }}><TextField name="vacance" label="Taux de vacances (%)" type="number" value={form.vacance} fullWidth onChange={onChange}/></Grid>
@@ -61,8 +61,8 @@ const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
         </div>
 
         <div>
-            <Typography variant="h6">Dépenses mensuelles(€)</Typography>
-            <Grid container spacing={2}>
+            <Typography variant="h6">Dépenses mensuelles</Typography>
+            <Grid container spacing={2} marginTop={1}>
                 <Grid size={{ xs: 6, md: 2 }}><TextField  name="chargesLocatives" label="Charges locatives récupérables" type="number" value={form.chargesLocatives} fullWidth onChange={onChange}/></Grid>
                 <Grid size={{ xs: 6, md: 2 }}><TextField name="admin" label="Administration (par mois)" type="number" value={form.admin} fullWidth onChange={onChange}/></Grid>
                 <Grid size={{ xs: 6, md: 2 }}><TextField name="gestion" label={`Gestion (${form.gestion * 12}/an)`}  type="number" value={form.gestion} fullWidth onChange={onChange}/></Grid>
@@ -74,8 +74,8 @@ const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
         </div>
 
         <div>
-            <Typography variant="h6">Impôts (%)</Typography>
-            <Grid container spacing={2}>
+            <Typography variant="h6">Impôts</Typography>
+            <Grid container spacing={2} marginTop={1}>
                 <Grid size={{ xs: 6, md: 6 }}><TextField name="tauxImpotBenefices" label="Taux d'imposition bénéfices (%)" type="number" value={form.tauxImpotBenefices} fullWidth onChange={onChange}/></Grid>
                 <Grid size={{ xs: 6, md: 6 }}><TextField name="crl" label="CRL (%)" type="number" value={form.crl} fullWidth onChange={onChange}/></Grid>
             </Grid>
