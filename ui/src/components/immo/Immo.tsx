@@ -114,7 +114,7 @@ const Immo = () => {
       <LeboncoinScrapping onScrapped={onScrapped}/>
       <ImmoSummary  {...summaryData}/>
       <ImmoForm form={form} onChange={handleChange}/>
-      {/*<OfferManager />*/}
+      <OfferManager />
     </div>
   );
 }
