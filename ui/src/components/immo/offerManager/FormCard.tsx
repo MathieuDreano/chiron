@@ -163,7 +163,9 @@ const handleDelete = async () => {
           <Button variant="contained" color="primary" onClick={handleSave}>
             Save
           </Button>
-          {!isNew && (<Button variant="outlined" color="error" onClick={handleDelete}>
+          {isNew ? (<Button variant="outlined" color="error" onClick={() => onDelete(999)}>
+            Cancel
+          </Button>) : (<Button variant="outlined" color="error" onClick={handleDelete}>
             Delete
           </Button>)}
         </Box>
