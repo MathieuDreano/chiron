@@ -10,15 +10,11 @@ type ImmoFormProps = {
 const ImmoForm = ({ form, onChange }: ImmoFormProps) => {
 
   const fraisAchat = (form.prixVente - form.fraisAgence)*0.08
-  const totalAchat = form.prixVente + fraisAchat + form.fraisDivers + form.fraisRenovation;
-  const apport = fraisAchat + form.fraisAgence + form.fraisDivers;
-  const pourcentApport = apport * 100 /totalAchat;
-  const montantCredit = totalAchat-apport;
  
   return (
     <div className="immo-form" style={{ display: "flex", flexDirection: "column"}}>
         <div>
-            <Typography variant="h6">Coût achat ({totalAchat}€)</Typography>
+            <Typography variant="h6">Coût achat</Typography>
             <Grid container spacing={1}>
                 <Grid size={{ xs: 6, md: 2 }}>
                     <TextField name="prixVente" label="Prix de vente FAI" type="number" value={form.prixVente} fullWidth onChange={onChange}/>
