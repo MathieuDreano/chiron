@@ -7,6 +7,7 @@ import './immo.css'
 import { cashflow500, type CashflowData } from "./useCashflow500";
 import { type ScrappedData } from "./useLeboncoin";
 import LeboncoinScrapping from "./LeboncoinScrapping";
+import OfferManager from "./OfferManager";
 
 export type ImmoFormData = {
   prixVente: number;
@@ -30,7 +31,7 @@ export type ImmoFormData = {
   gestion: number;
   admin: number;
   entretien: number;
-  taxeFonciere: number;
+  taxeFonciereMensuelle: number;
   servicesPublics: number;
   croissanceDepenses: number;
 
@@ -60,7 +61,7 @@ const defaultFormData: ImmoFormData = {
     gestion: 0,
     admin: 0,
     entretien: 0,
-    taxeFonciere: 0,
+    taxeFonciereMensuelle: 0,
     servicesPublics: 0,
     croissanceDepenses: 0,
 
@@ -93,7 +94,7 @@ const Immo = () => {
         fraisAgence: scrappedData.fraisAgence ?? prev.fraisAgence,
         loyer: scrappedData.loyers ?? prev.loyer,
         superficie: scrappedData.superficie ?? prev.superficie,
-        taxeFonciereMensuelle: scrappedData.taxeFonciereMensuelle ?? prev.taxeFonciere,
+        taxeFonciereMensuelle: scrappedData.taxeFonciereMensuelle ?? prev.taxeFonciereMensuelle,
         chargesLocatives: scrappedData.charges ?? prev.chargesLocatives,
       }));
     };
@@ -113,6 +114,7 @@ const Immo = () => {
       <LeboncoinScrapping onScrapped={onScrapped}/>
       <ImmoSummary  {...summaryData}/>
       <ImmoForm form={form} onChange={handleChange}/>
+      {/*<OfferManager />*/}
     </div>
   );
 }
