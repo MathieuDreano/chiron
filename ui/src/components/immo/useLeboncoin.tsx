@@ -39,6 +39,7 @@ export const useLeboncoin = () => {
   }, [adId]);
 
   const load_data_from_ad = (adId: number) => {
+    if (adId.toString().length != 10) return;
     setIsLoading(true);
     return fetch(`${api_base_url}/leboncoin/${adId}/scrap`)
       .then((res) => res.json())
@@ -48,6 +49,7 @@ export const useLeboncoin = () => {
   };
 
   const get_image_from_ad = (adId: number) => {
+    if (adId.toString().length != 10) return;
     return fetch(`${api_base_url}/leboncoin/${adId}/image`)
       .then((res) => res.json())
       .then((data) => setImage(data))

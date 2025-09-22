@@ -1,27 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLeboncoin, type ScrappedData } from "../useLeboncoin";
 import { TextField, Button, CircularProgress, Typography, Grid } from "@mui/material";
-
-function extractId(input: string) {
-  const value = input.toString().trim();
-  // Regex to match digits at the end of the URL or a raw ID
-  const match = value.match(/(\d+)$/);
-  if (match) {
-    return match[1];
-  } else {
-    console.log("No valid ID found in input");
-    return "";
-  }
-}
 
 const LeboncoinScrapping = ({ onScrapped }: { onScrapped: (scrappedData: ScrappedData) => void }) => {
   const { adId, setAdId, load_data_from_ad, image, isLoading, scrappedData } =
     useLeboncoin();
 
+  const [error, setError] = useState(false);
+
   useEffect(
     () => scrappedData && onScrapped(scrappedData),
     [onScrapped, scrappedData]
   );
+
+  function extractId(input: string) {
+    const value = input.toString().trim();
+    // Regex to match digits at the end of the URL or a raw ID
+    const match = value.match(/(\d+)$/);
+    if (match && match[1].length === 10) {
+      setError(false);
+      return match[1];
+    } else {
+      setError(true);
+      console.log("No valid 10-digit ID found in input");
+      return "";
+    }
+  }
 
   return (
     <div className="scrapper">
@@ -32,6 +36,8 @@ const LeboncoinScrapping = ({ onScrapped }: { onScrapped: (scrappedData: Scrappe
             name="adId"
             label="Id de l'offre leboncoin"
             type="string"
+            error={error}
+            helperText={error ? "Ad ID must have 10 characters" : ""}
             defaultValue={adId}
             fullWidth
             onChange={(e) => setAdId(extractId(e.target.value))}
