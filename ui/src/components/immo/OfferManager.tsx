@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
 type Offer = {
@@ -12,7 +12,7 @@ type Offer = {
 };
 
 //const api_base_url = "https://chiron-mz2f.onrender.com";
-const api_base_url = "https://chiron-n6kw2.ondigitalocean.app"
+const api_base_url = "https://chiron-n6kw2.ondigitalocean.app";
 //const api_base_url = "http://localhost:8000";
 
 const OfferManager: React.FC = () => {
@@ -75,9 +75,7 @@ const OfferManager: React.FC = () => {
       });
       const updatedOffer: Offer = await res.json();
 
-      setOffers((prev) =>
-        prev.map((o) => (o.id === id ? updatedOffer : o))
-      );
+      setOffers((prev) => prev.map((o) => (o.id === id ? updatedOffer : o)));
     } catch (err) {
       console.error(err);
       alert("Failed to update offer");
@@ -115,34 +113,52 @@ const OfferManager: React.FC = () => {
         value={newOffer.imageUrl}
         onChange={(e) => setNewOffer({ ...newOffer, imageUrl: e.target.value })}
       />
-      <Button variant="outlined" onClick={handleAddOffer}>Add Offer</Button>
+      <Button variant="outlined" onClick={handleAddOffer}>
+        Add Offer
+      </Button>
 
-      <h2>Existing Offers</h2>
-      {offers.map((offer) => (
-        <div
-          key={offer.id}
-          style={{
-            border: "1px solid #ccc",
-            padding: "10px",
-            marginBottom: "10px",
-          }}
-        >
-          <h3>{offer.title}</h3>
-          <p>Price: {offer.price} €</p>
-          <p>{offer.description}</p>
-          {offer.imageUrl && (
-            <img src={offer.imageUrl} alt={offer.title} style={{ maxWidth: "100%" }} />
-          )}
-          <div style={{ marginTop: "5px" }}>
-            <Button variant="outlined" onClick={() => toggleOfferFlag(offer.id, "visited")}>
-                {offer.visited ? "Visited ✅" : "Mark as Visited"}
-            </Button>
-            <Button variant="outlined" onClick={() => toggleOfferFlag(offer.id, "called")}>
-                {offer.called ? "Called ✅" : "Mark as Called"}
-            </Button>
-          </div>
+      {/* {!offers || offers.length === 0 ? (
+        <Typography>No offer to display</Typography>
+      ) : (
+        <div>
+          <h2>Existing Offers</h2>
+          {offers.map((offer) => (
+            <div
+              key={offer.id}
+              style={{
+                border: "1px solid #ccc",
+                padding: "10px",
+                marginBottom: "10px",
+              }}
+            >
+              <h3>{offer.title}</h3>
+              <p>Price: {offer.price} €</p>
+              <p>{offer.description}</p>
+              {offer.imageUrl && (
+                <img
+                  src={offer.imageUrl}
+                  alt={offer.title}
+                  style={{ maxWidth: "100%" }}
+                />
+              )}
+              <div style={{ marginTop: "5px" }}>
+                <Button
+                  variant="outlined"
+                  onClick={() => toggleOfferFlag(offer.id, "visited")}
+                >
+                  {offer.visited ? "Visited ✅" : "Mark as Visited"}
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => toggleOfferFlag(offer.id, "called")}
+                >
+                  {offer.called ? "Called ✅" : "Mark as Called"}
+                </Button>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )} */}
     </div>
   );
 };
