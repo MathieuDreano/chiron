@@ -26,11 +26,12 @@ class Offer(Base):
     __tablename__ = "offer"
 
     id = Column(Integer, primary_key=True, index=True)
-    lbc_id = Column(Integer, nullable=False)
+    lbc_id = Column(Integer)
     called = Column(Boolean)
     visited = Column(Boolean)
     simulation_id = Column(Integer)
     note = Column(String)
+    image_url = Column(String)
 
     def __repr__(self):
         return (

@@ -10,17 +10,19 @@ from db.database import get_db  # we'll add this helper in database.py
 router = APIRouter(prefix="/offers", tags=["offers"])
 
 class OfferCreate(BaseModel):
-    lbc_id: int
+    lbc_id: Optional[int] = None
     called: Optional[bool] = None
     visited: Optional[bool] = None
     simulation_id: Optional[int] = None
     note: Optional[str] = None
+    image_url: Optional[str] = None
 
 class OfferUpdate(BaseModel):
     called: Optional[bool] = None
     visited: Optional[bool] = None
     simulation_id: Optional[int] = None
     note: Optional[str] = None
+    image_url: Optional[str] = None
 
 # Read all offers
 @router.get("/")
@@ -46,7 +48,8 @@ def create_new_offer(offer: OfferCreate, db: Session = Depends(get_db)):
         called=offer.called,
         visited=offer.visited,
         simulation_id=offer.simulation_id,
-        note=offer.note
+        note=offer.note,
+        image_url=offer.image_url
     )
     return new_offer
 
