@@ -13,16 +13,18 @@ export type Offer = {
   simulation_id?: number;
   note?: string;
   image_url?: string;
+  isNew?: boolean;
 };
 
 type FormCardProps = {
   offer: Offer;
   onUpdate: (updatedOffer: Offer) => void;
+  onDelete: (id: number) => void;
   apiBaseUrl: string;
   isNew?: boolean; // mark if this is a new offer
 };
 
-const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew }: FormCardProps) => {
+const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew, onDelete }: FormCardProps) => {
   const [editOffer, setEditOffer] = useState<Offer>(offer);
   const [image, setImage] = useState<string>();
 
@@ -77,8 +79,32 @@ const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew }: FormCardProps) => {
     }
   };
 
+const handleDelete = async () => {
+  if (!window.confirm("Are you sure you want to delete this offer?")) return;
+
+  try {
+    const res = await fetch(`${apiBaseUrl}/offers/${editOffer.id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!res.ok) {
+      const errData = await res.json();
+      console.error(errData);
+      alert("Failed to delete offer");
+      return;
+    }
+
+    onDelete(editOffer.id); // remove it from parent state
+  } catch (err) {
+    console.error(err);
+    alert("Failed to delete offer");
+  }
+};
+
+
   return (
-        <Box
+    <Box
       sx={{
         border: "1px solid #ccc",
         p: 2,
@@ -107,12 +133,15 @@ const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew }: FormCardProps) => {
           fullWidth
           label="LBC ID"
           value={editOffer.lbc_id}
+          helperText="id or url or text containing id"
           onChange={(e) => handleFieldChange("lbc_id", e.target.value)}
           margin="dense"
         />
         <TextField
           fullWidth
-          label="Note"
+          label="Notes"
+          multiline
+          helperText="any useful information"
           value={editOffer.note || ""}
           onChange={(e) => handleFieldChange("note", e.target.value)}
           margin="dense"
@@ -134,6 +163,9 @@ const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew }: FormCardProps) => {
           <Button variant="contained" color="primary" onClick={handleSave}>
             Save
           </Button>
+          {!isNew && (<Button variant="outlined" color="error" onClick={handleDelete}>
+            Delete
+          </Button>)}
         </Box>
       </Box>
     </Box>

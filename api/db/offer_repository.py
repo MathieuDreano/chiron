@@ -6,13 +6,14 @@ def get_all_offers(db: Session):
     return db.query(Offer).all()
 
 # Create a new offer
-def create_offer(db: Session, lbc_id: int, called: bool = None, visited: bool = None, simulation_id: int = None, note: str = None):
+def create_offer(db: Session, lbc_id: int, called: bool = None, visited: bool = None, simulation_id: int = None, note: str = None, image_url: str = None):
     new_offer = Offer(
         lbc_id=lbc_id,
         called=called,
         visited=visited,
         simulation_id=simulation_id,
-        note=note
+        note=note,
+        image_url=image_url
     )
     db.add(new_offer)
     db.commit()
@@ -32,4 +33,12 @@ def update_offer(db: Session, offer_id: int, **kwargs):
 
     db.commit()
     db.refresh(offer)
+    return offer
+
+def delete_offer(db: Session, offer_id: int) -> Offer | None:
+    offer = db.query(Offer).filter(Offer.id == offer_id).first()
+    if not offer:
+        return None
+    db.delete(offer)
+    db.commit()
     return offer

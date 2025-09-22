@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy.orm import Session
-from db.offer_repository import get_all_offers, create_offer, update_offer
+from db.offer_repository import get_all_offers, create_offer, update_offer, delete_offer
 from db.database import get_db  # we'll add this helper in database.py
 
 router = APIRouter(prefix="/offers", tags=["offers"])
@@ -60,3 +60,11 @@ def update_existing_offer(offer_id: int, offer_data: OfferUpdate, db: Session = 
     if not updated_offer:
         raise HTTPException(status_code=404, detail="Offer not found")
     return updated_offer
+
+# Delete an offer
+@router.delete("/{offer_id}")
+def delete_offer_endpoint(offer_id: int, db: Session = Depends(get_db)):
+    offer = delete_offer(db, offer_id)
+    if not offer:
+        raise HTTPException(status_code=404, detail="Offer not found")
+    return {"detail": "Offer deleted"}

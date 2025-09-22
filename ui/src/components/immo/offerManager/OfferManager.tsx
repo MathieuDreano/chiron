@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Button, Typography } from "@mui/material";
 import FormCard, { type Offer } from "./FormCard.tsx";
 
-const api_base_url = "http://localhost:8000";
+//const api_base_url = "https://chiron-mz2f.onrender.com";
+const api_base_url = "https://chiron-n6kw2.ondigitalocean.app"
+//const api_base_url = "http://localhost:8000";
 
 const OfferManager: React.FC = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
@@ -14,8 +16,9 @@ const OfferManager: React.FC = () => {
       .catch(console.error);
   }, []);
 
-  if (!offers || offers.length === 0)
-    return <Typography>No offer to display</Typography>;
+  const handleDeleteOffer = (id: number) => {
+    setOffers((prev) => prev.filter((o) => o.id !== id));
+  };
 
   return (
     <div style={{ maxWidth: 600, margin: "auto" }}>
@@ -34,6 +37,7 @@ const OfferManager: React.FC = () => {
             visited: false,
             simulation_id: undefined,
             note: "",
+            isNew: true,
           };
           setOffers((prev) => [newOffer, ...prev]);
         }}
@@ -44,13 +48,14 @@ const OfferManager: React.FC = () => {
         <FormCard
           key={offer.id}
           offer={offer}
-          isNew={offer.id > Date.now()} // simple check for temporary id
+          isNew={offer.isNew} // simple check for temporary id
           apiBaseUrl={api_base_url}
           onUpdate={(savedOffer) => {
             setOffers((prev) =>
               prev.map((o) => (o.id === offer.id ? savedOffer : o))
             );
           }}
+          onDelete={handleDeleteOffer}
         />
       ))}
     </div>
