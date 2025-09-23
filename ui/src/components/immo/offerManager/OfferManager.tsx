@@ -10,7 +10,7 @@ const OfferManager: React.FC = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
 
   useEffect(() => {
-    fetch(`${api_base_url}/offers`)
+    fetch(`${api_base_url}/offers/`)
       .then((res) => res.json())
       .then((data: Offer[]) => setOffers(data))
       .catch(console.error);

@@ -18,7 +18,7 @@ const Games = () => {
   const [games, setGames] = useState<Game[]>([]);
 
   useEffect(() => {
-    fetch(`${api_base_url}/games`)
+    fetch(`${api_base_url}/games/`)
       .then((res) => res.json())
       .then((data) => setGames(data))
       .catch((err) => console.error(err));

@@ -28,7 +28,7 @@ const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew, onDelete }: FormCardProp
   // Fetch image when LBC ID is valid
   const get_image_from_ad = useCallback(() => {
     if (editOffer?.lbc_id?.toString().length != 10) return;
-    return fetch(`${api_base_url}/leboncoin/${editOffer.lbc_id}/image`)
+    return fetch(`${api_base_url}/leboncoin/${editOffer.lbc_id}/image/`)
       .then((res) => res.json())
       .then((data) => setImage(data))
       .catch((err) => console.error(err))
@@ -45,7 +45,7 @@ const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew, onDelete }: FormCardProp
   // Update existing offer
   const updateOffer = async () => {
     try {
-      const res: Response = await fetch(`${apiBaseUrl}/offers/${editOffer.id}`, {
+      const res: Response = await fetch(`${apiBaseUrl}/offers/${editOffer.id}/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editOffer),

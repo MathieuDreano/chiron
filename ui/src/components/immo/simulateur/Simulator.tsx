@@ -68,12 +68,30 @@ const defaultFormData: ImmoFormData = {
     crl: 2.5, //(%)
 };
 
+function loadFormData(): ImmoFormData {
+  try {
+    const saved = localStorage.getItem("formData");
+    if (!saved) return defaultFormData;
+
+    const parsed = JSON.parse(saved);
+
+    // Keep only keys in defaultFormData and fallback missing ones
+    return {
+      ...defaultFormData,
+      ...Object.fromEntries(
+        Object.entries(parsed).filter(([key]) =>
+          key in defaultFormData
+        )
+      )
+    } as ImmoFormData;
+  } catch {
+    return defaultFormData;
+  }
+}
+
 const Simulator = () => {
 
-  const [form, setForm] = useState<ImmoFormData>(() => {
-    const saved = localStorage.getItem("formData");
-    return saved ? JSON.parse(saved) : defaultFormData;
-  });
+  const [form, setForm] = useState<ImmoFormData>(() =>  loadFormData());
 
   const simulationResults = useMemo((): CashflowData => simulate(form), [form]);
 
