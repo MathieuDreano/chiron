@@ -31,8 +31,8 @@ const OfferManager: React.FC = () => {
         color="primary"
         onClick={() => {
           const newOffer: Offer = {
-            id: 999, // temporary
-            lbc_id: "",
+            id: 999,
+            lbc_id: undefined,
             called: false,
             visited: false,
             simulation_id: undefined,

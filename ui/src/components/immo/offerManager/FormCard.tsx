@@ -1,13 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Button, TextField, Box } from "@mui/material";
-
-//const api_base_url = "https://chiron-mz2f.onrender.com";
-const api_base_url = "https://chiron-n6kw2.ondigitalocean.app"
-//const api_base_url = "http://localhost:8000";
+const api_base_url = import.meta.env.VITE_API_BASE_URL;
 
 export type Offer = {
   id: number; // temporary negative or Date.now() for new offers
-  lbc_id: string;
+  lbc_id?: number;
   called: boolean;
   visited: boolean;
   simulation_id?: number;
@@ -45,24 +42,14 @@ const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew, onDelete }: FormCardProp
     setEditOffer((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = async () => {
+  // Update existing offer
+  const updateOffer = async () => {
     try {
-      let res: Response;
-      if (isNew) {
-        // Save new offer
-        res = await fetch(`${apiBaseUrl}/offers`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editOffer),
-        });
-      } else {
-        // Update existing offer
-        res = await fetch(`${apiBaseUrl}/offers/${editOffer.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editOffer),
-        });
-      }
+      const res: Response = await fetch(`${apiBaseUrl}/offers/${editOffer.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editOffer),
+      });
 
       if (!res.ok) {
         const errData = await res.json();
@@ -76,6 +63,30 @@ const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew, onDelete }: FormCardProp
     } catch (err) {
       console.error(err);
       alert("Failed to save offer");
+    }
+  };
+
+  // Save new offer
+  const createOffer = async () => {
+    try {
+      const res: Response = await fetch(`${apiBaseUrl}/offers`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editOffer),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        console.error(errData);
+        alert("Failed to create offer: " + JSON.stringify(errData.detail));
+        return;
+      }
+
+      const savedOffer: Offer = await res.json();
+      onUpdate(savedOffer);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to create offer");
     }
   };
 
@@ -160,14 +171,24 @@ const handleDelete = async () => {
           >
             {editOffer.called ? "Called ✅" : "Mark as Called"}
           </Button>
-          <Button variant="contained" color="primary" onClick={handleSave}>
-            Save
-          </Button>
-          {isNew ? (<Button variant="outlined" color="error" onClick={() => onDelete(999)}>
-            Cancel
-          </Button>) : (<Button variant="outlined" color="error" onClick={handleDelete}>
-            Delete
-          </Button>)}
+          {isNew
+            ? (<>
+              <Button variant="contained" color="primary" disabled={editOffer === offer} onClick={createOffer}>
+                Create
+              </Button>
+              <Button variant="outlined" color="error" onClick={() => onDelete(999)}>
+                Cancel
+              </Button>
+            </>)
+            : (<>
+              <Button variant="contained" color="primary" disabled={editOffer === offer} onClick={updateOffer}>
+                Save
+              </Button>
+              <Button variant="outlined" color="error" onClick={handleDelete}>
+                Delete
+              </Button>
+            </>)
+          }
         </Box>
       </Box>
     </Box>
