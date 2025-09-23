@@ -27,9 +27,18 @@ const OfferManager: React.FC = () => {
     setEditingId(null);
   };
 
+  const handleCreateOffer = (createdOffer: Offer) => {
+    console.log('offers', offers)
+    console.log('createdOffer', createdOffer)
+    setOffers((prev) =>
+      prev.map((o) => (o.isNew ? {...createdOffer, isNew: false} : o))
+    );
+    setEditingId(null);
+  };
+
   const addNewOffer = () => {
     const newOffer: Offer = {
-      id: Date.now(), // temporary id
+      id: 999, // temporary id
       lbc_id: undefined,
       called: false,
       visited: false,
@@ -50,73 +59,55 @@ const OfferManager: React.FC = () => {
 
       <List>
       {offers.map((offer) => (
-        <ListItem>
+        <ListItem key={offer.id}>
         <Accordion
           key={offer.id}
           expanded={editingId === offer.id}
           onChange={() => setEditingId(editingId === offer.id ? null : offer.id)}
-          sx={{width: "100%"}}
+          sx={{width: "100%", border: "1px solid palegreen",}}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      gap: "1em",
-      width: "100%",
-    }}
-  >
-    {offer.image_url && (
-        <Box sx={{ flexShrink: 0 }}>
-          <img
-            src={offer.image_url}
-            alt="LBC preview"
-            style={{ width: 150, height: "auto", borderRadius: 4 }}
-          />
-        </Box>
-      )}
-    {/* Left side: LBC ID and note */}
-    <Box>
-      <Typography variant="body1">
-        {offer.note}
-      </Typography>
-    </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "1em",
+                width: "100%",
+              }}
+            >
+              {offer.image_url && (
+                <Box sx={{ flexShrink: 0 }}>
+                    <img
+                      src={offer.image_url}
+                      alt="LBC preview"
+                      style={{ width: 150, height: "auto", borderRadius: 4 }}
+                    />
+                  </Box>
+              )}
+              {/* Left side: LBC ID and note */}
+              <Box>
+                <Typography variant="body1">
+                  {offer.note}
+                </Typography>
+              </Box>
 
-    {/* Right side: Called / Visited badges */}
-    <Box sx={{ display: "flex", gap: 1 }}>
-      {offer.called ? (
-        <Typography
-          variant="body2"
-          sx={{ color: "green", fontWeight: "bold" }}
-        >
-          Called ✅
-        </Typography>
-      ) :  (
-        <Typography
-          variant="body2"
-          sx={{ color: "green", fontWeight: "bold" }}
-        >
-          Not called ❌
-        </Typography>
-      )}
-      {offer.visited ? (
-        <Typography
-          variant="body2"
-          sx={{ color: "blue", fontWeight: "bold" }}
-        >
-          Visited ✅
-        </Typography>
-      ) : (
-        <Typography
-          variant="body2"
-          sx={{ color: "blue", fontWeight: "bold" }}
-        >
-          Not visited ❌
-        </Typography>
-      )}
-    </Box>
-  </Box>
+              {/* Right side: Called / Visited badges */}
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <Typography
+                  variant="body2"
+                  sx={{ color: "blue", fontWeight: "bold" }}
+                >
+                  {offer.called ? "Called ✅" : "Not called ❌"}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: "blue", fontWeight: "bold" }}
+                >
+                  {offer.visited ? "Visited ✅" : "Not visited ❌"}
+                </Typography>
+              </Box>
+            </Box>
           </AccordionSummary>
           <AccordionDetails>
             {editingId === offer.id ? (
@@ -124,6 +115,7 @@ const OfferManager: React.FC = () => {
                 offer={offer}
                 isNew={offer.isNew}
                 apiBaseUrl={api_base_url}
+                onCreate={handleCreateOffer}
                 onUpdate={handleUpdateOffer}
                 onDelete={handleDeleteOffer}
               />

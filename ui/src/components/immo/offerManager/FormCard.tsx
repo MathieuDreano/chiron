@@ -15,6 +15,7 @@ export type Offer = {
 
 type FormCardProps = {
   offer: Offer;
+  onCreate: (createdOffer: Offer) => void;
   onUpdate: (updatedOffer: Offer) => void;
   onDelete: (id: number) => void;
   apiBaseUrl: string;
@@ -23,6 +24,7 @@ type FormCardProps = {
 
 const FormCard = ({
   offer,
+  onCreate,
   onUpdate,
   apiBaseUrl,
   isNew,
@@ -68,7 +70,7 @@ const FormCard = ({
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editOffer),
+          body: JSON.stringify({...editOffer, lbc_id: editOffer.lbc_id && extractId(editOffer.lbc_id)}),
         }
       );
 
@@ -93,7 +95,7 @@ const FormCard = ({
       const res: Response = await fetch(`${apiBaseUrl}/offers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editOffer),
+        body: JSON.stringify({...editOffer, lbc_id: editOffer.lbc_id && extractId(editOffer.lbc_id)}),
       });
 
       if (!res.ok) {
@@ -104,7 +106,7 @@ const FormCard = ({
       }
 
       const savedOffer: Offer = await res.json();
-      onUpdate(savedOffer);
+      onCreate(savedOffer);
     } catch (err) {
       console.error(err);
       alert("Failed to create offer");
@@ -133,6 +135,18 @@ const FormCard = ({
       alert("Failed to delete offer");
     }
   };
+
+  function extractId(input: string) {
+    const value = input.toString().trim();
+    // Regex to match digits at the end of the URL or a raw ID
+    const match = value.match(/(\d+)$/);
+    if (match && match[1].length === 10) {
+      return match[1];
+    } else {
+      console.log("No valid 10-digit ID found in input");
+      return "";
+    }
+  }
 
   return (
     <Box
@@ -174,9 +188,9 @@ const FormCard = ({
             <Grid size={12}>
               <Button
                 variant="outlined"
-                onClick={() =>
-                  window.open(
-                    `https://www.leboncoin.fr/ad/ventes_immobilieres/${editOffer.lbc_id}`,
+                onClick={() => 
+                  editOffer.lbc_id && window.open(
+                    `https://www.leboncoin.fr/ad/ventes_immobilieres/${extractId(editOffer.lbc_id)}`,
                     "_blank"
                   )
                 }
