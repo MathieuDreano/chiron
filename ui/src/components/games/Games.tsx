@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid"
 import Container from "@mui/material/Container"
 import GameCard from "./GameCard"
 import { CircularProgress } from "@mui/material";
+const api_base_url = import.meta.env.VITE_API_BASE_URL;
 
 export type Game = {
   id: number;
@@ -12,10 +13,6 @@ export type Game = {
   players: string;     // e.g. "3-4"
   playtime: string;    // e.g. "60-120 min"
 };
-
-//const api_base_url = "https://chiron-mz2f.onrender.com";
-const api_base_url = "https://chiron-n6kw2.ondigitalocean.app"
-//const api_base_url = "http://localhost:8000";
 
 const Games = () => {
   const [games, setGames] = useState<Game[]>([]);

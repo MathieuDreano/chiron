@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+const api_base_url = import.meta.env.VITE_API_BASE_URL;
 
 export type ScrappedData = {
   prixVente: number;
@@ -11,9 +12,6 @@ export type ScrappedData = {
   imageUrl: string;
 };
 
-//const api_base_url = "https://chiron-mz2f.onrender.com";
-const api_base_url = "https://chiron-n6kw2.ondigitalocean.app"
-//const api_base_url = "http://localhost:8000";
 
 export const useLeboncoin = () => {
   const [adId, setAdId] = useState<string>(() => {
