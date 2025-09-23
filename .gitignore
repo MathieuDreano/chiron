@@ -1,6 +1,5 @@
 # Local Netlify folder
 .netlify
-.env
-.env.**
-!.env.sample
+api/.env
+api/.env.**
 **/**.pyc
