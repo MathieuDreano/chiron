@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "API run dev",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "fastapi",
+      "args": [
+        "dev",
+        "api/main.py"
+      ]
+    }
+  ]
+}
