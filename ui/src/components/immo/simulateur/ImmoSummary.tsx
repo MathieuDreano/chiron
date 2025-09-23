@@ -1,6 +1,6 @@
-import { Card, CardContent, Container, Divider, Grid, Tooltip, Typography } from "@mui/material";
+import { Button, Card, CardContent, Container, Divider, Grid, Tooltip, Typography } from "@mui/material";
 import type { CashflowData } from "./useSimulator";
-const ImmoSummary = (data: CashflowData) => {
+const ImmoSummary = ({data, onSave}: {data: CashflowData, onSave: () => void}) => {
   const statusClassName = (data.cashflowMensuel > 0) ? "positive" : "negative"
   return (
     <Card className={`immo-summary ${statusClassName}`}>
@@ -113,7 +113,7 @@ const ImmoSummary = (data: CashflowData) => {
         </Container>
 
         {data.cashflowMensuel > 0 ? (<Typography fontSize={30}>💰</Typography>) : (<Typography fontSize={30}>😟</Typography>)}
-
+        <Button onClick={onSave}>Save</Button>
       </CardContent>
     </Card>
   );

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, Accordion, AccordionSummary, AccordionDetails, Box, List, ListItem } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FormCard, { type Offer } from "./FormCard.tsx";
-
-//const api_base_url = "https://chiron-mz2f.onrender.com";
-const api_base_url = "https://chiron-n6kw2.ondigitalocean.app"
-//const api_base_url = "http://localhost:8000";
+const api_base_url = import.meta.env.VITE_API_BASE_URL;
 
 const OfferManager: React.FC = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
     fetch(`${api_base_url}/offers/`)
@@ -18,46 +17,140 @@ const OfferManager: React.FC = () => {
 
   const handleDeleteOffer = (id: number) => {
     setOffers((prev) => prev.filter((o) => o.id !== id));
+    if (editingId === id) setEditingId(null);
+  };
+
+  const handleUpdateOffer = (updatedOffer: Offer) => {
+    setOffers((prev) =>
+      prev.map((o) => (o.id === updatedOffer.id ? updatedOffer : o))
+    );
+    setEditingId(null);
+  };
+
+  const addNewOffer = () => {
+    const newOffer: Offer = {
+      id: Date.now(), // temporary id
+      lbc_id: undefined,
+      called: false,
+      visited: false,
+      simulation_id: undefined,
+      note: "",
+      isNew: true,
+    };
+    setOffers((prev) => [newOffer, ...prev]);
+    setEditingId(newOffer.id); // automatically open the form
   };
 
   return (
     <div style={{ maxWidth: 600, margin: "auto" }}>
-      
-      <Typography variant="h4" gutterBottom>
-        Existing Offers
-      </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          const newOffer: Offer = {
-            id: 999,
-            lbc_id: undefined,
-            called: false,
-            visited: false,
-            simulation_id: undefined,
-            note: "",
-            isNew: true,
-          };
-          setOffers((prev) => [newOffer, ...prev]);
-        }}
-      >
+
+      <Button variant="contained" color="primary" onClick={addNewOffer} sx={{ mb: 2 }}>
         Add New Offer
       </Button>
+
+      <List>
       {offers.map((offer) => (
-        <FormCard
+        <ListItem>
+        <Accordion
           key={offer.id}
-          offer={offer}
-          isNew={offer.isNew} // simple check for temporary id
-          apiBaseUrl={api_base_url}
-          onUpdate={(savedOffer) => {
-            setOffers((prev) =>
-              prev.map((o) => (o.id === offer.id ? savedOffer : o))
-            );
-          }}
-          onDelete={handleDeleteOffer}
-        />
+          expanded={editingId === offer.id}
+          onChange={() => setEditingId(editingId === offer.id ? null : offer.id)}
+          sx={{width: "100%"}}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      gap: "1em",
+      width: "100%",
+    }}
+  >
+    {offer.image_url && (
+        <Box sx={{ flexShrink: 0 }}>
+          <img
+            src={offer.image_url}
+            alt="LBC preview"
+            style={{ width: 150, height: "auto", borderRadius: 4 }}
+          />
+        </Box>
+      )}
+    {/* Left side: LBC ID and note */}
+    <Box>
+      <Typography variant="body1">
+        {offer.note}
+      </Typography>
+    </Box>
+
+    {/* Right side: Called / Visited badges */}
+    <Box sx={{ display: "flex", gap: 1 }}>
+      {offer.called ? (
+        <Typography
+          variant="body2"
+          sx={{ color: "green", fontWeight: "bold" }}
+        >
+          Called ✅
+        </Typography>
+      ) :  (
+        <Typography
+          variant="body2"
+          sx={{ color: "green", fontWeight: "bold" }}
+        >
+          Not called ❌
+        </Typography>
+      )}
+      {offer.visited ? (
+        <Typography
+          variant="body2"
+          sx={{ color: "blue", fontWeight: "bold" }}
+        >
+          Visited ✅
+        </Typography>
+      ) : (
+        <Typography
+          variant="body2"
+          sx={{ color: "blue", fontWeight: "bold" }}
+        >
+          Not visited ❌
+        </Typography>
+      )}
+    </Box>
+  </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            {editingId === offer.id ? (
+              <FormCard
+                offer={offer}
+                isNew={offer.isNew}
+                apiBaseUrl={api_base_url}
+                onUpdate={handleUpdateOffer}
+                onDelete={handleDeleteOffer}
+              />
+            ) : (
+              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                <Button variant="outlined" onClick={() => setEditingId(offer.id)}>
+                  Edit
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => handleUpdateOffer({ ...offer, called: !offer.called })}
+                >
+                  {offer.called ? "Called ✅" : "Mark as Called"}
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => handleUpdateOffer({ ...offer, visited: !offer.visited })}
+                >
+                  {offer.visited ? "Visited ✅" : "Mark as Visited"}
+                </Button>
+              </Box>
+            )}
+          </AccordionDetails>
+        </Accordion>
+        </ListItem>
       ))}
+      </List>
     </div>
   );
 };

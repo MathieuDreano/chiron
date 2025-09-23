@@ -26,7 +26,7 @@ class Offer(Base):
     __tablename__ = "offer"
 
     id = Column(Integer, primary_key=True, index=True)
-    lbc_id = Column(Integer)
+    lbc_id = Column(String)
     called = Column(Boolean)
     visited = Column(Boolean)
     simulation_id = Column(Integer)

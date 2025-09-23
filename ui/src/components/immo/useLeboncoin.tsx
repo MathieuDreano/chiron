@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 const api_base_url = import.meta.env.VITE_API_BASE_URL;
 
 export type ScrappedData = {
+  lbc_id: string
   prixVente: number;
   fraisAgence: number;
   loyers: number;

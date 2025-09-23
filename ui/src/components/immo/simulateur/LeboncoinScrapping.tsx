@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLeboncoin, type ScrappedData } from "../useLeboncoin";
 import { TextField, Button, CircularProgress, Typography, Grid } from "@mui/material";
 
-const LeboncoinScrapping = ({ onScrapped }: { onScrapped: (scrappedData: ScrappedData) => void }) => {
+const LeboncoinScrapping = ({ onScrapped, onIdChange }: { onScrapped: (scrappedData: ScrappedData) => void,  onIdChange: (id: string) => void }) => {
   const { adId, setAdId, load_data_from_ad, image, isLoading, scrappedData } =
     useLeboncoin();
 
@@ -11,6 +11,11 @@ const LeboncoinScrapping = ({ onScrapped }: { onScrapped: (scrappedData: Scrappe
   useEffect(
     () => scrappedData && onScrapped(scrappedData),
     [onScrapped, scrappedData]
+  );
+
+  useEffect(
+    () => onIdChange(adId),
+    [adId, onIdChange]
   );
 
   function extractId(input: string) {

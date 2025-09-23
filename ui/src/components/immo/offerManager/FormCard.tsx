@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { Button, TextField, Box } from "@mui/material";
+import { Button, TextField, Box, Grid } from "@mui/material";
 const api_base_url = import.meta.env.VITE_API_BASE_URL;
 
 export type Offer = {
   id: number; // temporary negative or Date.now() for new offers
-  lbc_id?: number;
+  lbc_id?: string;
   called: boolean;
   visited: boolean;
   simulation_id?: number;
@@ -21,22 +21,40 @@ type FormCardProps = {
   isNew?: boolean; // mark if this is a new offer
 };
 
-const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew, onDelete }: FormCardProps) => {
+const FormCard = ({
+  offer,
+  onUpdate,
+  apiBaseUrl,
+  isNew,
+  onDelete,
+}: FormCardProps) => {
   const [editOffer, setEditOffer] = useState<Offer>(offer);
-  const [image, setImage] = useState<string>();
 
+  console.log(offer);
   // Fetch image when LBC ID is valid
   const get_image_from_ad = useCallback(() => {
-    if (editOffer?.lbc_id?.toString().length != 10) return;
-    return fetch(`${api_base_url}/leboncoin/${editOffer.lbc_id}/image/`)
+    if (editOffer.lbc_id === offer.lbc_id) return;
+
+    if (
+      !editOffer?.lbc_id ||
+      editOffer.lbc_id.toString().length !== 10 ||
+      editOffer.lbc_id === offer.lbc_id
+    ) {
+      handleFieldChange("image_url", "");
+      return;
+    }
+
+    return fetch(`${api_base_url}/leboncoin/${editOffer.lbc_id}/image`)
       .then((res) => res.json())
-      .then((data) => setImage(data))
-      .catch((err) => console.error(err))
-  }, [editOffer.lbc_id]);
+      .then((data) => {
+        handleFieldChange("image_url", data);
+      })
+      .catch((err) => console.error(err));
+  }, [editOffer.lbc_id, offer.lbc_id]);
 
   useEffect(() => {
-    get_image_from_ad()
-  }, [editOffer.lbc_id, get_image_from_ad])
+    get_image_from_ad();
+  }, [editOffer.lbc_id, get_image_from_ad]);
 
   const handleFieldChange = (field: keyof Offer, value: string | boolean) => {
     setEditOffer((prev) => ({ ...prev, [field]: value }));
@@ -45,11 +63,14 @@ const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew, onDelete }: FormCardProp
   // Update existing offer
   const updateOffer = async () => {
     try {
-      const res: Response = await fetch(`${apiBaseUrl}/offers/${editOffer.id}/`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editOffer),
-      });
+      const res: Response = await fetch(
+        `${apiBaseUrl}/offers/${editOffer.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(editOffer),
+        }
+      );
 
       if (!res.ok) {
         const errData = await res.json();
@@ -90,29 +111,28 @@ const FormCard = ({ offer, onUpdate, apiBaseUrl, isNew, onDelete }: FormCardProp
     }
   };
 
-const handleDelete = async () => {
-  if (!window.confirm("Are you sure you want to delete this offer?")) return;
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this offer?")) return;
 
-  try {
-    const res = await fetch(`${apiBaseUrl}/offers/${editOffer.id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      const res = await fetch(`${apiBaseUrl}/offers/${editOffer.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
 
-    if (!res.ok) {
-      const errData = await res.json();
-      console.error(errData);
+      if (!res.ok) {
+        const errData = await res.json();
+        console.error(errData);
+        alert("Failed to delete offer");
+        return;
+      }
+
+      onDelete(editOffer.id); // remove it from parent state
+    } catch (err) {
+      console.error(err);
       alert("Failed to delete offer");
-      return;
     }
-
-    onDelete(editOffer.id); // remove it from parent state
-  } catch (err) {
-    console.error(err);
-    alert("Failed to delete offer");
-  }
-};
-
+  };
 
   return (
     <Box
@@ -127,16 +147,6 @@ const handleDelete = async () => {
         alignItems: "flex-start",
       }}
     >
-      {/* Left: Image */}
-      {image && (
-        <Box sx={{ flexShrink: 0 }}>
-          <img
-            src={image}
-            alt="LBC preview"
-            style={{ width: 150, height: "auto", borderRadius: 4 }}
-          />
-        </Box>
-      )}
 
       {/* Right: Fields and buttons */}
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 1 }}>
@@ -158,37 +168,100 @@ const handleDelete = async () => {
           margin="dense"
         />
 
-        <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 1 }}>
-          <Button
-            variant="outlined"
-            onClick={() => handleFieldChange("visited", !editOffer.visited)}
-          >
-            {editOffer.visited ? "Visited ✅" : "Mark as Visited"}
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => handleFieldChange("called", !editOffer.called)}
-          >
-            {editOffer.called ? "Called ✅" : "Mark as Called"}
-          </Button>
-          {isNew
-            ? (<>
-              <Button variant="contained" color="primary" disabled={editOffer === offer} onClick={createOffer}>
-                Create
+        <Box sx={{ mt: 1 }}>
+          {/* Row 1: Voir l'annonce */}
+          <Grid container spacing={1} sx={{ mb: 1 }}>
+            <Grid size={12}>
+              <Button
+                variant="outlined"
+                onClick={() =>
+                  window.open(
+                    `https://www.leboncoin.fr/ad/ventes_immobilieres/${editOffer.lbc_id}`,
+                    "_blank"
+                  )
+                }
+                disabled={!editOffer.lbc_id}
+                fullWidth
+              >
+                VOIR L'ANNONCE 👀
               </Button>
-              <Button variant="outlined" color="error" onClick={() => onDelete(999)}>
-                Cancel
+            </Grid>
+          </Grid>
+
+          {/* Row 2: Called / Visited */}
+          <Grid container spacing={1} sx={{ mb: 1 }}>
+            <Grid size={6}>
+              <Button
+                variant="outlined"
+                onClick={() => handleFieldChange("visited", !editOffer.visited)}
+                fullWidth
+              >
+                {editOffer.visited ? "Visited ✅" : "Mark as Visited"}
               </Button>
-            </>)
-            : (<>
-              <Button variant="contained" color="primary" disabled={editOffer === offer} onClick={updateOffer}>
-                Save
+            </Grid>
+            <Grid size={6}>
+              <Button
+                variant="outlined"
+                onClick={() => handleFieldChange("called", !editOffer.called)}
+                fullWidth
+              >
+                {editOffer.called ? "Called ✅" : "Mark as Called"}
               </Button>
-              <Button variant="outlined" color="error" onClick={handleDelete}>
-                Delete
-              </Button>
-            </>)
-          }
+            </Grid>
+          </Grid>
+
+          {/* Row 3: Save / Delete */}
+          <Grid container spacing={1}>
+            {isNew ? (
+              <>
+                <Grid size={6}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={editOffer === offer}
+                    fullWidth
+                    onClick={createOffer}
+                  >
+                    Create
+                  </Button>
+                </Grid>
+                <Grid size={6}>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    fullWidth
+                    onClick={() => onDelete(999)}
+                  >
+                    Cancel
+                  </Button>
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid size={6}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={editOffer === offer}
+                    fullWidth
+                    onClick={updateOffer}
+                  >
+                    Save
+                  </Button>
+                </Grid>
+                <Grid size={6}>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    fullWidth
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </Button>
+                </Grid>
+              </>
+            )}
+          </Grid>
         </Box>
       </Box>
     </Box>

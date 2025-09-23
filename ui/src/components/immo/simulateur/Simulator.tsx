@@ -7,8 +7,11 @@ import './immo.css'
 import { simulate, type CashflowData } from "./useSimulator";
 import { type ScrappedData } from "../useLeboncoin";
 import LeboncoinScrapping from "./LeboncoinScrapping";
+import type { Offer } from "../offerManager/FormCard";
+const api_base_url = import.meta.env.VITE_API_BASE_URL;
 
 export type ImmoFormData = {
+  lbc_id?: string,
   prixVente: number;
   fraisAgence: number;
   fraisDivers: number;
@@ -101,9 +104,7 @@ const Simulator = () => {
     return () => clearTimeout(handler);
   }, [form]);
 
-  console.log('toto');
   const onScrapped = useCallback((scrappedData: ScrappedData) => {
-    console.log("onScrapped Immo")
     if (scrappedData) {
       setForm((prev: ImmoFormData) => ({
         ...prev,
@@ -117,6 +118,49 @@ const Simulator = () => {
     };
   }, [])
 
+  const onIdChange = useCallback((id: string) => {
+    if (id) {
+      setForm((prev: ImmoFormData) => ({
+        ...prev,
+        lbc_id: id,
+      }));
+    };
+  }, [])
+
+  const onSave = async () => {
+    try {
+
+      console.log('saving with form', form)
+      console.log('saving with lbc_id', form.lbc_id)
+      const newOffer: Offer = {
+            id: Date.now(), // temporary id
+            lbc_id: form.lbc_id,
+            called: false,
+            visited: false,
+            simulation_id: undefined,
+            note: `cashflow ${simulationResults.cashflowMensuel.toFixed(0)}`,
+            isNew: true,
+          };
+
+      const res: Response = await fetch(`${api_base_url}/offers`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newOffer),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        console.error(errData);
+        alert("Failed to save offer: " + JSON.stringify(errData.detail));
+        return;
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("Failed to create offer");
+    }
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     console.log('handleChange', name, value)
@@ -128,8 +172,8 @@ const Simulator = () => {
 
   return (
     <div className="immo">
-      <LeboncoinScrapping onScrapped={onScrapped}/>
-      <ImmoSummary  {...simulationResults}/>
+      <LeboncoinScrapping onScrapped={onScrapped} onIdChange={onIdChange}/>
+      <ImmoSummary data={{...simulationResults}} onSave={onSave}/>
       <ImmoForm form={form} onChange={handleChange}/>
     </div>
   );

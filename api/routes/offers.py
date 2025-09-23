@@ -10,7 +10,7 @@ from db.database import get_db  # we'll add this helper in database.py
 router = APIRouter(prefix="/offers", tags=["offers"])
 
 class OfferCreate(BaseModel):
-    lbc_id: Optional[int] = None
+    lbc_id: Optional[str] = None
     called: Optional[bool] = None
     visited: Optional[bool] = None
     simulation_id: Optional[int] = None
@@ -18,6 +18,7 @@ class OfferCreate(BaseModel):
     image_url: Optional[str] = None
 
 class OfferUpdate(BaseModel):
+    lbc_id: Optional[str] = None
     called: Optional[bool] = None
     visited: Optional[bool] = None
     simulation_id: Optional[int] = None
