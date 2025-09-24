@@ -95,7 +95,7 @@ const FormCard = ({
       const res: Response = await fetch(`${apiBaseUrl}/offers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({...editOffer, lbc_id: editOffer.lbc_id && extractId(editOffer.lbc_id)}),
+        body: JSON.stringify({...editOffer}),
       });
 
       if (!res.ok) {
