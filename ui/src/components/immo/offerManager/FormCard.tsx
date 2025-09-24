@@ -32,7 +32,6 @@ const FormCard = ({
 }: FormCardProps) => {
   const [editOffer, setEditOffer] = useState<Offer>(offer);
 
-  console.log(offer);
   // Fetch image when LBC ID is valid
   const get_image_from_ad = useCallback(() => {
     if (!editOffer?.lbc_id) return;
