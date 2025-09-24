@@ -35,18 +35,16 @@ const FormCard = ({
   console.log(offer);
   // Fetch image when LBC ID is valid
   const get_image_from_ad = useCallback(() => {
-    if (editOffer.lbc_id === offer.lbc_id) return;
+    if (!editOffer?.lbc_id) return;
+    const id = extractId(editOffer.lbc_id)
+    if (id === offer.lbc_id) return;
 
-    if (
-      !editOffer?.lbc_id ||
-      editOffer.lbc_id.toString().length !== 10 ||
-      editOffer.lbc_id === offer.lbc_id
-    ) {
+    if (id.length !== 10) {
       handleFieldChange("image_url", "");
       return;
     }
 
-    return fetch(`${api_base_url}/leboncoin/${editOffer.lbc_id}/image`)
+    return fetch(`${api_base_url}/leboncoin/${id}/image`)
       .then((res) => res.json())
       .then((data) => {
         handleFieldChange("image_url", data);
@@ -70,7 +68,7 @@ const FormCard = ({
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({...editOffer, lbc_id: editOffer.lbc_id && extractId(editOffer.lbc_id)}),
+          body: JSON.stringify(editOffer),
         }
       );
 
@@ -95,7 +93,7 @@ const FormCard = ({
       const res: Response = await fetch(`${apiBaseUrl}/offers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({...editOffer}),
+        body: JSON.stringify(editOffer),
       });
 
       if (!res.ok) {
