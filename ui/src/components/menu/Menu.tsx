@@ -19,12 +19,12 @@ const Menu = () => {
           <Button component={Link} to="/games" color="inherit" sx={{ fontSize: { xs: "1rem", sm: "1.2rem" }}}>
             Jeux
           </Button>
-          {/* <Button component={Link} to="/offers" color="inherit" sx={{ fontSize: { xs: "1rem", sm: "1.2rem" }}}>
+          <Button component={Link} to="/offers" color="inherit" sx={{ fontSize: { xs: "1rem", sm: "1.2rem" }}}>
             Offres
           </Button>
           <Button component={Link} to="/simulator" color="inherit" sx={{ fontSize: { xs: "1rem", sm: "1.2rem" }}}>
             Simulateur
-          </Button> */}
+          </Button>
         </Toolbar>
         </Box>
       </AppBar>
