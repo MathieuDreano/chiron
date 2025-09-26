@@ -1,6 +1,10 @@
 .chironlogo {
   width: auto;
   max-width: min(300px, 100%);;
-  will-change: filter;
-  transition: filter 300ms;
+}
+
+.github-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
