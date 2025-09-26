@@ -2,12 +2,22 @@ import { Button, Container, Typography } from '@mui/material';
 import './chiron.css'
 import chironLogo from '@/assets/chiron2.png'
 import { useState } from 'react';
+import GithubBadge from '../GithubBadge';
 
 const Chiron = () => {
   const [showVideo, setShowVideo] = useState(false);
   return (
-  <Container>
-    <img src={chironLogo} className="chironlogo" alt="Chiron logo" />
+  <Container style={{display: 'flex', flexDirection: "column"}}>
+    <Container style={{width: "100%"}}>
+      <a
+        href="https://github.com/MathieuDreano/chiron"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img src={chironLogo} className="chironlogo" alt="Chiron logo" />
+      </a>
+    </Container>
+    <GithubBadge/>
     <h1>Fullstack developper introduction</h1>
     <Typography variant="body1" sx={{ mb: 4, color: "text.secondary", textAlign: "center" }}>
       By the end of the course, you’ll have a fullstack application where
