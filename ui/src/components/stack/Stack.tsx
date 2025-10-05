@@ -5,9 +5,60 @@ import pythonLogo from "@/assets/python.svg";
 import postgreSQLLogo from "@/assets/postgresql.svg";
 import viteLogo from "/vite.svg";
 import { Box, Card, Stack } from "@mui/material";
+import TechSelector, { type TechOption } from "./TechSelector";
+import { useState } from "react";
 
-const TechStack = () => (
-  <div className="stack">
+const frontendFrameworks: Record<string, TechOption> = {
+  react: { name: "React", logo: reactLogo, link: "https://react.dev", spin: true },
+  vue: { name: "Vue", logo: reactLogo, link: "https://vuejs.org", spin: true },
+  angular: { name: "Angular", logo: reactLogo, link: "https://angular.dev" },
+  vite: { name: "Vite", logo: viteLogo, link: "https://vite.dev" },
+}
+
+const frontendBuildTools: Record<string, TechOption> = {
+  vite: { name: "Vite", logo: viteLogo, link: "https://vite.dev" },
+  webpack: { name: "Webpack", logo: viteLogo, link: "https://webpack.js.org" },
+  parcel: { name: "Parcel", logo: viteLogo, link: "https://parceljs.org" },
+}
+
+const apiLanguages: Record<string, TechOption> = {
+  python: { name: "Python", logo: pythonLogo, link: "https://www.python.org/" },
+  java: { name: "Java", logo: pythonLogo, link: "https://www.java.com/" },
+  nodejs: { name: "Node.js", logo: pythonLogo, link: "https://nodejs.org/" },
+  go: { name: "Go", logo: pythonLogo, link: "https://golang.org/" },
+}
+
+const databases: Record<string, TechOption> = {
+  postgresql: { name: "PostgreSQL", logo: postgreSQLLogo, link: "https://www.postgresql.org/" },
+  // java: { name: "Java", logo: pythonLogo, link: "https://www.java.com/" },
+  // nodejs: { name: "Node.js", logo: pythonLogo, link: "https://nodejs.org/" },
+  // go: { name: "Go", logo: pythonLogo, link: "https://golang.org/" },
+}
+
+const apiFrameworks: Record<string, Record<string, TechOption>> = {
+  python: {
+    fastapi: { name: "FastAPI", logo: fastApiLogo, link: "https://fastapi.tiangolo.com/" },
+    django: { name: "Django", logo: undefined, link: "https://www.djangoproject.com/" },
+  },
+  java: {
+    spring: { name: "Spring", logo: undefined, link: "https://spring.io/" },
+    micronaut: { name: "Micronaut", logo: undefined, link: "https://micronaut.io/" },
+  },
+  nodejs: {
+    express: { name: "Express", logo: undefined, link: "https://expressjs.com/" },
+    nestjs: { name: "NestJS", logo: undefined, link: "https://nestjs.com/" },
+  },
+  go: {
+    gin: { name: "Gin", logo: undefined, link: "https://gin-gonic.com/" },
+    echo: { name: "Echo", logo: undefined, link: "https://echo.labstack.com/" },
+  },
+}
+
+const TechStack = () => {
+  const [selectedApiLanguage, setSelectedApiLanguage] = useState("python")
+  const [selectedApiFramework, setSelectedApiFramework] = useState("fastapi")
+  return (
+      <div className="stack">
     <Card
       sx={{
         flexWrap: "wrap",
@@ -35,23 +86,8 @@ const TechStack = () => (
         useFlexGap
         sx={{ flexWrap: "wrap", p: 2 }}
       >
-        <div>
-          <div className="logo spin">
-            <a href="https://react.dev" target="_blank">
-              <img src={reactLogo} className="logo react" alt="React logo" />
-            </a>
-          </div>
-          <h3>React</h3>
-        </div>
-
-        <div>
-          <div className="logo">
-            <a href="https://vite.dev" target="_blank">
-              <img src={viteLogo} className="logo vite" alt="Vite logo" />
-            </a>
-          </div>
-          <h3>Vite</h3>
-        </div>
+        <TechSelector label="Language/Framework" options={frontendFrameworks} defaultKey="react" />
+        <TechSelector label="Build tool" options={frontendBuildTools} defaultKey="vite" />
       </Stack>
     </Card>
 
@@ -82,43 +118,22 @@ const TechStack = () => (
         useFlexGap
         sx={{ flexWrap: "wrap", p: 2 }}
       >
-        <div>
-          <div className="logo">
-            <a href="https://www.python.org/" target="_blank">
-              <img src={pythonLogo} className="logo python" alt="Python logo" />
-            </a>
-          </div>
-          <h3>Python</h3>
-        </div>
-
-        <div>
-          <div className="logo">
-            <a href="https://fastapi.tiangolo.com/" target="_blank">
-              <img
-                src={fastApiLogo}
-                className="logo fastapi"
-                alt="FastAPI logo"
-              />
-            </a>
-          </div>
-          <h3>FastAPI</h3>
-        </div>
-
-        <div>
-          <div className="logo">
-            <a href="https://www.postgresql.org/" target="_blank">
-              <img
-                src={postgreSQLLogo}
-                className="logo postgresql"
-                alt="PostgreSQL logo"
-              />
-            </a>
-          </div>
-          <h3>PostgreSQL</h3>
-        </div>
+        <TechSelector label="Language" options={apiLanguages} defaultKey="python"
+          onChange={(key) => {
+            setSelectedApiLanguage(key)
+            // reset framework when language changes
+            setSelectedApiFramework(Object.keys(apiFrameworks[key])[0])
+          }}
+        />
+        {/* For framework, filter options based on selected language */}
+        <TechSelector label="Framework" options={apiFrameworks[selectedApiLanguage]} defaultKey={selectedApiFramework} />
       </Stack>
     </Card>
+    <TechSelector label="Database" options={databases} defaultKey="postgresql" />
+
   </div>
-);
+  );
+}
+
 
 export default TechStack;
