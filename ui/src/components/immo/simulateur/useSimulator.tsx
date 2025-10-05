@@ -35,8 +35,6 @@ export const simulate = (form: ImmoFormData): CashflowData => {
     const revenuAnnuelBrut = revenusMensuelBrut * 12;
 
     // DEPENSES
-    const taxeFonciereMensuelleEstimee = (calculerTaxeFonciereAnnuelle(revenuAnnuelBrut) / 12);
-    console.log("taxeFonciereMensuelle", form.taxeFonciereMensuelle, "taxeFonciereMensuelleEstimee", taxeFonciereMensuelleEstimee);
     const taxesCrlEtFonciereMensuelle = revenuAnnuelBrut * form.crl / 100 / 12 + form.taxeFonciereMensuelle;
     const depensesMensuelles = form.admin + form.gestion + form.entretien + taxesCrlEtFonciereMensuelle + form.servicesPublics;
 
@@ -105,13 +103,6 @@ function calculateMonthlyInterests(totalAchat: number, apport: number, form: Imm
   }
 
   return interests; // array of monthly interests
-}
-
-function calculerTaxeFonciereAnnuelle(valeurLocativeBruteAnnuelle: number) {
-  const tauxMunicipal = 46.3;
-  const tauxMetropolitain = 6.41;
-  const baseImposable = valeurLocativeBruteAnnuelle / 2;
-  return baseImposable * (tauxMunicipal + tauxMetropolitain) / 100;
 }
 
 

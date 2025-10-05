@@ -8,6 +8,7 @@ import { simulate, type CashflowData } from "./useSimulator";
 import { type ScrappedData } from "../useLeboncoin";
 import LeboncoinScrapping from "./LeboncoinScrapping";
 import type { Offer } from "../offerManager/FormCard";
+import { TargetCashflow } from "./TargetCashflow";
 const api_base_url = import.meta.env.VITE_API_BASE_URL;
 
 export type ImmoFormData = {
@@ -163,7 +164,6 @@ const Simulator = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    console.log('handleChange', name, value)
     setForm((prev: ImmoFormData) => ({
       ...prev,
       [name]: parseFloat(value) || 0,
@@ -173,7 +173,10 @@ const Simulator = () => {
   return (
     <div className="immo">
       <LeboncoinScrapping onScrapped={onScrapped} onIdChange={onIdChange}/>
+      <div style={{display: "flex", flexDirection: "row", justifyContent: "center"}}>
+      <TargetCashflow form={form} />
       <ImmoSummary data={{...simulationResults}} onSave={onSave}/>
+      </div>
       <ImmoForm form={form} onChange={handleChange}/>
     </div>
   );

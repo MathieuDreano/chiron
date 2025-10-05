@@ -5,7 +5,7 @@ const ImmoSummary = ({data, onSave}: {data: CashflowData, onSave: () => void}) =
   return (
     <Card className={`immo-summary ${statusClassName}`}>
       <CardContent>
-        <Grid container sx={{display: "flex", flexDirection:"column", gap:"1em", flexWrap: "wrap"}}>
+        <Grid container sx={{display: "flex", flexDirection:"column", gap:"0.5em", flexWrap: "wrap"}}>
           <Grid container>
             <Grid size={3}><Tooltip arrow title="Prix de vente + frais d'achat + frais divers + rénovation">
               <Grid sx={{ flex: 1, textAlign: "center" }}>
@@ -63,8 +63,6 @@ const ImmoSummary = ({data, onSave}: {data: CashflowData, onSave: () => void}) =
               </Grid>
             </Tooltip></Grid>
           </Grid>
-
-          <Divider sx={{ my: 2 }} />
 
           <Grid
             container
