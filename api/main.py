@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes import games, leboncoin, offers
 
 app = FastAPI()
-allow_origin_pattern = r"^(https?://(localhost|127\.0\.0\.1)(:\d+)?|https://chironproject\.netlify\.app)$"
+allow_origin_pattern = r"^(https?://(localhost|127\.0\.0\.1)(:\d+)?|https://chironproject\.netlify\.app|https://balatrimmo\.netlify\.app)$"
 
 app.add_middleware(
     CORSMiddleware,
